@@ -430,7 +430,7 @@
   });
 
   // ==========================================
-  // ЛОГИКА ОТЗЫВОВ
+  // ЛОГИКА ОТЗЫВОВ (КЛИЕНТСКАЯ ЧАСТЬ)
   // ==========================================
   async function loadReviews() {
     const container = document.getElementById('reviewsContainer');
@@ -493,7 +493,7 @@
   loadReviews();
 
   // ==========================================
-  // АДМИН-ПАНЕЛЬ
+  // АДМИН-ПАНЕЛЬ (ОБНОВЛЕННЫЙ БЛОК)
   // ==========================================
   if (window.location.hash === '#admin') {
     document.getElementById('adminPanel').style.display = 'block';
@@ -528,11 +528,18 @@
       const res = await fetch(`${REVIEWS_API_URL}/api/admin/reviews`, {
         headers: { 'X-Admin-Key': ADMIN_PASSWORD }
       });
+
+      // Если сервер вернул ошибку (например, 401 или 500)
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Сервер вернул ${res.status}: ${errorText}`);
+      }
+
       const reviews = await res.json();
       
       list.innerHTML = '';
-      if (reviews.length === 0) {
-        list.innerHTML = '<p style="color:#666;">Нет отзывов для модерации.</p>';
+      if (!reviews || reviews.length === 0) {
+        list.innerHTML = '<p style="color:#aaa; text-align:center;">Пока нет отзывов. Когда кто-то оставит отзыв на сайте, он появится здесь.</p>';
         return;
       }
 
@@ -555,7 +562,8 @@
         `;
       });
     } catch (e) {
-      list.innerHTML = '<p style="color:#ef4444;">Ошибка загрузки.</p>';
+      // Выводим текст ошибки прямо в панель
+      list.innerHTML = `<p style="color:#ef4444; text-align:center;">Ошибка: ${e.message}</p>`;
     }
   }
 
