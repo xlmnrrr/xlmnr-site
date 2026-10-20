@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d0d0d">
+<title>АвтоАзбука - Демо-сайт для портфолио</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root { 
+    --bg: #0d0d0d; 
+    --surface: rgba(21, 21, 21, 0.4); 
+    --accent: #ff0000;
+    --text-muted: #b0b0b0; 
+    --border: rgba(255,255,255,0.1);
+    --smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  html { scroll-behavior: smooth; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: #fff;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+  /* ШАПКА (упрощенная) */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(21, 21, 21, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 15px 0;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  /* ЗАГЛУШКА ЛОГОТИПА */
+  .logo-placeholder {
+    width: 180px;
+    height: 60px;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .header-contact {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .header-phone {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* СЕКЦИИ */
+  .section-pad { padding: 60px 0; border-bottom: 1px solid var(--border); }
+  .section-pad:last-of-type { border-bottom: none; }
+
+  .section-title {
+    font-size: clamp(26px, 5vw, 42px); font-weight: 800;
+    text-align: center; margin-bottom: 15px; line-height: 1.2;
+  }
+  .section-title span { color: var(--accent); }
+  
+  .section-subtitle {
+    text-align: center; color: var(--text-muted); max-width: 650px;
+    margin: 0 auto 40px; font-size: clamp(15px, 3.5vw, 16px);
+  }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 20px; }
+
+  .card {
+    background: var(--surface); 
+    padding: 30px 25px; 
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    display: flex; 
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  .card h3 { font-size: 20px; margin-bottom: 10px; color: var(--accent); }
+  .card p { color: var(--text-muted); font-size: 15px; margin-bottom: 20px; flex-grow: 1; }
+
+  .btn {
+    display: inline-block; background: var(--accent); color: #fff;
+    padding: 14px 28px; font-size: 15px; font-weight: 700; text-decoration: none;
+    border-radius: 10px; border: none; cursor: pointer; 
+    transition: background-color 0.3s ease; font-family: inherit;
+    text-align: center; width: 100%;
+  }
+  .btn:hover { background: #d90000; }
+
+  /* ФОНОВОЕ ИЗОБРАЖЕНИЕ (упрощено) */
+  .bg-wrapper-top {
+    position: relative;
+    background-color: #111;
+    background-image: url('fon.jpg');
+    background-size: cover;
+    background-position: center top;
+  }
+  .bg-wrapper-top::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 13, 13, 0.8);
+    z-index: 0;
+  }
+  .bg-wrapper-top > section { position: relative; z-index: 1; }
+
+  /* КОНТАКТЫ (упрощено) */
+  .contacts-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  /* ЗАГЛУШКА КАРТЫ */
+  .map-placeholder {
+    border-radius: 20px;
+    border: 1px dashed var(--border);
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 18px;
+    font-weight: 600;
+    min-height: 300px;
+  }
+
+  .contact-info-large {
+    background: var(--surface); 
+    border-radius: 20px; 
+    padding: 30px; 
+    border: 1px solid var(--border);
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px;
+  }
+  
+  .contact-header { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px; 
+    margin-bottom: 10px; 
+  }
+  
+  /* ЗАГЛУШКА ЛОГОТИПА В КОНТАКТАХ */
+  .contact-logo-placeholder {
+    width: 220px;
+    height: 100px;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .contact-item { display: flex; align-items: flex-start; gap: 15px; }
+  .contact-icon {
+    width: 45px; height: 45px; background: rgba(255,255,255,0.05); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent);
+  }
+  .contact-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .contact-text { display: flex; flex-direction: column; min-width: 0; }
+  .contact-text .label { font-size: 14px; color: var(--text-muted); margin-bottom: 2px; }
+  .contact-text .value { font-size: 19px; font-weight: 700; color: #fff; line-height: 1.3; word-break: break-word; }
+
+  /* ФОТОГАЛЕРЕЯ */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 15px;
+    margin-top: 30px;
+  }
+  .gallery-item {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    aspect-ratio: 16/10;
+    background: #111;
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .gallery-item:hover img { transform: scale(1.05); }
+
+  /* АККОРДЕОН УСЛУГ (заглушки) */
+  .accordion { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .accordion-item { 
+    border: 1px solid var(--border); 
+    border-radius: 10px; 
+    overflow: hidden; 
+    background: rgba(255,255,255,0.03); 
+  }
+  .accordion-header {
+    width: 100%; padding: 15px 18px; background: none; border: none;
+    color: #fff; font-size: 17px; font-weight: 700; font-family: inherit;
+    cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+    text-align: left;
+  }
+  .accordion-header:hover { color: var(--accent); }
+  .accordion-icon { position: relative; width: 20px; height: 20px; flex-shrink: 0; }
+  .accordion-icon::before, .accordion-icon::after {
+    content: ''; position: absolute; left: 50%; top: 50%;
+    width: 14px; height: 2px; background: var(--accent);
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease;
+  }
+  .accordion-icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .accordion-item.active .accordion-icon::after { transform: translate(-50%, -50%) rotate(0deg); }
+  .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+  .accordion-item.active .accordion-content { max-height: 500px; }
+  .accordion-inner { padding: 0 18px 15px 18px; border-top: 1px solid var(--border); padding-top: 15px; }
+  
+  .price-item { 
+    display: flex; justify-content: space-between; align-items: center; gap: 12px; 
+    font-size: 15px; padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.05);
+  }
+  .price-item:last-child { border-bottom: none; }
+  .price-name { color: #eee; }
+  .price-value { color: var(--accent); font-weight: 800; white-space: nowrap; }
+
+  /* ПОДВАЛ (ЗАГЛУШКА) */
+  .footer {
+    background: rgba(21, 21, 21, 0.6); border-top: 1px solid var(--border);
+    padding: 30px 20px; text-align: center; font-size: 14px; color: var(--text-muted);
+    margin-top: auto;
+  }
+
+  /* ФОРМА (визуальная заглушка) */
+  .booking-form { display: flex; flex-direction: column; gap: 15px; }
+  .booking-input { 
+    width: 100%; padding: 14px 15px; border-radius: 10px; border: 1px solid var(--border); 
+    background: rgba(34, 34, 34, 0.8); color: #fff; font-size: 15px; font-family: inherit; 
+    outline: none; 
+  }
+  .booking-input:focus { border-color: var(--accent); }
+  .form-status { font-size: 14px; text-align: center; margin-top: 5px; font-weight: 600; color: #22c55e; }
+
+  /* МОДАЛЬНОЕ ОКНО (ЗАГЛУШКА) */
+  .modal-overlay { 
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); 
+    display: flex; align-items: center; justify-content: center; padding: 20px; 
+    z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; 
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal { 
+    background: #151515; border: 1px solid var(--border); 
+    border-radius: 20px; padding: 35px 25px; max-width: 500px; width: 100%; position: relative; 
+    max-height: 90vh; overflow-y: auto; 
+  }
+  .modal-close { 
+    position: absolute; top: 15px; right: 15px; width: 36px; height: 36px; 
+    border-radius: 50%; background: transparent; border: 1px solid var(--border); 
+    color: var(--text-muted); font-size: 22px; cursor: pointer; 
+    display: flex; align-items: center; justify-content: center; 
+  }
+  .modal-close:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .modal h3 { font-size: 24px; margin-bottom: 20px; color: var(--accent); }
+
+  @media (max-width: 768px) {
+    .header-inner { flex-direction: column; gap: 10px; }
+    .contacts-wrapper { grid-template-columns: 1fr; }
+    .map-placeholder { min-height: 200px; }
+    .section-pad { padding: 40px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="container header-inner">
+    <div class="logo-placeholder">[Логотип]</div>
+    <div class="header-contact">
+      <a href="tel:+79990000000" class="header-phone">+7 (999) 000-00-00</a>
+      <button class="btn" style="width: auto; padding: 10px 20px;" id="openBooking">Записаться</button>
+    </div>
+  </div>
+</header>
+
+<div class="bg-wrapper-top">
+  <!-- ПОЧЕМУ МЫ -->
+  <section class="section-pad">
+    <div class="container">
+      <h2 class="section-title">Почему <span>мы</span></h2>
+      <p class="section-subtitle">Мы делаем ремонт, которому можно доверять.</p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Опытные мастера</h3>
+          <p>Стаж работы от 5 лет. Знаем все марки автомобилей.</p>
+        </div>
+        <div class="card">
+          <h3>Честные цены</h3>
+          <p>Никаких скрытых доплат. Называем цену до начала работ.</p>
+        </div>
+        <div class="card">
+          <h3>Гарантия</h3>
+          <p>Даём гарантию на все виды ремонтных работ.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- УСЛУГИ (ЗАГЛУШКИ) -->
+  <section class="section-pad">
+    <div class="container">
+      <h2 class="section-title">Наши <span>услуги</span></h2>
+      <p class="section-subtitle">Профессиональный ремонт авто в Уфе. Гарантия качества.</p>
+      <div class="grid-4">
+        <div class="card">
+          <h3>Услуга 1</h3>
+          <p>Краткое описание услуги. Здесь может быть любой текст.</p>
+          <button class="btn" onclick="alert('Это демо-сайт для портфолио.')">Узнать цену</button>
+        </div>
+        <div class="card">
+          <h3>Услуга 2</h3>
+          <p>Краткое описание услуги. Здесь может быть любой текст.</p>
+          <button class="btn" onclick="alert('Это демо-сайт для портфолио.')">Узнать цену</button>
+        </div>
+        <div class="card">
+          <h3>Услуга 3</h3>
+          <p>Краткое описание услуги. Здесь может быть любой текст.</p>
+          <button class="btn" onclick="alert('Это демо-сайт для портфолио.')">Узнать цену</button>
+        </div>
+        <div class="card">
+          <h3>Услуга 4</h3>
+          <p>Краткое описание услуги. Здесь может быть любой текст.</p>
+          <button class="btn" onclick="alert('Это демо-сайт для портфолио.')">Узнать цену</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ФОТОГАЛЕРЕЯ -->
+<section class="section-pad">
+  <div class="container">
+    <h2 class="section-title">Наши <span>работы</span></h2>
+    <p class="section-subtitle">Фотографии из нашего сервиса.</p>
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="work1.jpg" alt="Фото работы 1" loading="lazy"></div>
+      <div class="gallery-item"><img src="work2.jpg" alt="Фото работы 2" loading="lazy"></div>
+      <div class="gallery-item"><img src="work3.jpg" alt="Фото работы 3" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- КОНТАКТЫ (ЗАГЛУШКИ) -->
+<section class="section-pad">
+  <div class="container">
+    <h2 class="section-title">Контакты</h2>
+    <p class="section-subtitle">Приезжайте к нам или свяжитесь удобным способом.</p>
+    
+    <div class="contacts-wrapper">
+      <div class="map-placeholder">[Карта]</div>
+
+      <div class="contact-info-large">
+        <div class="contact-header">
+          <div class="contact-logo-placeholder">[Логотип]</div>
+        </div>
+        
+        <div class="contact-item">
+          <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
+          <div class="contact-text">
+            <span class="label">Адрес</span>
+            <span class="value">ул. Примерная, 1</span>
+          </div>
+        </div>
+        
+        <div class="contact-item">
+          <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></div>
+          <div class="contact-text">
+            <span class="label">Телефоны</span>
+            <span class="value">+7 (999) 000-00-00</span>
+          </div>
+        </div>
+        
+        <div class="contact-item">
+          <div class="contact-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+          <div class="contact-text">
+            <span class="label">Режим работы</span>
+            <span class="value">Ежедневно с 9:00 до 21:00</span>
+          </div>
+        </div>
+        
+        <button class="btn" id="openBooking2">Связаться с нами</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- УСЛУГИ И ЦЕНЫ (ЗАГЛУШКИ) -->
+<section class="section-pad">
+  <div class="container">
+    <h2 class="section-title">Услуги и <span>цены</span></h2>
+    <div class="accordion" id="services-accordion">
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">
+          <span>Категория услуг 1</span>
+          <span class="accordion-icon" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-content">
+          <div class="accordion-inner">
+            <div class="price-item"><span class="price-name">Услуга 1.1</span><span class="price-value">от 1 000 ₽</span></div>
+            <div class="price-item"><span class="price-name">Услуга 1.2</span><span class="price-value">от 2 000 ₽</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">
+          <span>Категория услуг 2</span>
+          <span class="accordion-icon" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-content">
+          <div class="accordion-inner">
+            <div class="price-item"><span class="price-name">Услуга 2.1</span><span class="price-value">от 1 500 ₽</span></div>
+            <div class="price-item"><span class="price-name">Услуга 2.2</span><span class="price-value">от 2 500 ₽</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ПОДВАЛ (ЗАГЛУШКА) -->
+<footer class="footer">
+  <div class="container">
+    <p>&copy; <span id="currentYear"></span> АвтоАзбука. Карта партнера.</p>
+  </div>
+</footer>
+
+<!-- МОДАЛЬНОЕ ОКНО (ЗАГЛУШКА) -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">×</button>
+    <h3>Записаться в сервис</h3>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">Это демонстрационная форма для портфолио. Реальная отправка отключена.</p>
+    
+    <form class="booking-form" id="demoForm">
+      <input type="text" class="booking-input" placeholder="Ваше имя" required>
+      <input type="tel" class="booking-input" placeholder="Ваш телефон" required>
+      <textarea class="booking-input" placeholder="Опишите проблему (необязательно)"></textarea>
+      <button type="submit" class="btn">Отправить заявку</button>
+      <div class="form-status" id="formStatus"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+  // Аккордеон
+  document.querySelectorAll('.accordion-header').forEach(header => {
+    header.addEventListener('click', function() {
+      const item = this.closest('.accordion-item');
+      // Закрываем другие (опционально)
+      // document.querySelectorAll('.accordion-item').forEach(i => { if(i !== item) i.classList.remove('active'); });
+      item.classList.toggle('active');
+    });
+  });
+
+  // Модальное окно (заглушка)
+  const modal = document.getElementById('bookingModal');
+  const modalClose = document.getElementById('modalClose');
+  const openBtns = [document.getElementById('openBooking'), document.getElementById('openBooking2')];
+  const demoForm = document.getElementById('demoForm');
+  const formStatus = document.getElementById('formStatus');
+
+  function openModal() { modal.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeModal() { modal.classList.remove('open'); document.body.style.overflow = ''; formStatus.textContent = ''; }
+
+  openBtns.forEach(btn => { if(btn) btn.addEventListener('click', openModal); });
+  modalClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+  demoForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    formStatus.textContent = 'Заявка отправлена! (Это демо)';
+    this.reset();
+    setTimeout(() => { closeModal(); }, 2000);
+  });
+</script>
+</body>
+</html>

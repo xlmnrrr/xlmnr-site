@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="XLMNR — создание сайтов и лендингов, которые приносят клиентов.">
+<meta name="theme-color" content="#050505">
+<title>XLMNR | Создание сайтов для бизнеса</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root { 
+    --bg: #050505; --surface: #111111; --accent: #10b981; --accent-hover: #059669;
+    --text: #ffffff; --text-muted: #9ca3af; --border: rgba(255,255,255,0.08); --smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; position: relative; }
+  .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; }
+
+  /* ================= ГЛОБАЛЬНЫЙ ФОН С БЕГУЩИМ КОДОМ ================= */
+  .global-code-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.10;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--accent);
+    white-space: pre;
+    filter: blur(0.4px);
+  }
+  .global-code-bg .code-column {
+    position: absolute;
+    top: -100%;
+    width: 12.5%;
+    height: 200%;
+    animation: scrollCode linear infinite;
+  }
+  @keyframes scrollCode {
+    from { transform: translateY(0); }
+    to { transform: translateY(50%); }
+  }
+
+  /* ================= ПРЕЛОАДЕР ================= */
+  .preloader-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s cubic-bezier(0.65, 0, 0.35, 1), visibility 1s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .preloader-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .preloader-overlay .code-background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--accent);
+    white-space: pre;
+    filter: blur(0.5px);
+    animation: fadeInBg 3s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  }
+  @keyframes fadeInBg {
+    from { opacity: 0; }
+    to { opacity: 0.15; }
+  }
+  .logo-composition {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  .full-logo {
+    font-size: clamp(60px, 15vw, 120px);
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 1.5s cubic-bezier(0.65, 0, 0.35, 1), transform 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+    text-shadow: 0 0 30px rgba(0,0,0,0.8);
+  }
+  .preloader-overlay.show-logo .full-logo {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .letter-x {
+    color: var(--text);
+    transition: color 1.2s cubic-bezier(0.65, 0, 0.35, 1), text-shadow 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .preloader-overlay.flash-green .letter-x {
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(16,185,129,0.9), 0 0 60px rgba(16,185,129,0.6), 0 0 100px rgba(16,185,129,0.4);
+  }
+  .slogan {
+    margin-top: 30px;
+    font-size: clamp(14px, 3vw, 18px);
+    color: #9ca3af;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.4s, transform 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.4s;
+  }
+  .preloader-overlay.flash-green .slogan {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .slogan span { color: var(--accent); font-weight: 600; }
+
+  /* ШАПКА */
+  .header { 
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
+    background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(10px); 
+    border-bottom: 1px solid var(--border); 
+    transform: translateY(-100%); 
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
+  }
+  .header.show { transform: translateY(0); }
+  .header-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; gap: 20px; }
+  .logo { font-size: 24px; font-weight: 800; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; letter-spacing: 0.05em; flex-shrink: 0; }
+  .logo span { color: var(--accent); }
+  .nav { display: flex; gap: 30px; flex-shrink: 0; }
+  .nav a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.3s; }
+  .nav a:hover { color: var(--accent); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: #000; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; }
+  .btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+  .btn-outline { background: transparent; color: var(--accent); border: 2px solid var(--accent); }
+  .btn-outline:hover { background: rgba(16, 185, 129, 0.1); box-shadow: none; }
+
+  /* Кнопки в шапке */
+  .header-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+  
+  .btn-discount {
+    background: #f59e0b; color: #000; padding: 10px 16px; border-radius: 8px;
+    font-size: 14px; font-weight: 700; border: none; cursor: pointer;
+    transition: all 0.3s ease; display: flex; align-items: center; gap: 6px;
+    animation: pulseDiscount 2s infinite; white-space: nowrap;
+  }
+  .btn-discount:hover { background: #d97706; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+  @keyframes pulseDiscount {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+  }
+
+  /* СЕКЦИИ */
+  section { padding: 100px 0; position: relative; }
+  .section-title { font-size: clamp(32px, 5vw, 48px); font-weight: 800; text-align: center; margin-bottom: 15px; line-height: 1.2; }
+  .section-title span { color: var(--accent); }
+  .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 60px; font-size: 18px; }
+
+  /* ГЛАВНЫЙ ЭКРАН */
+  .hero { min-height: 100vh; display: flex; align-items: center; position: relative; padding-top: 80px; }
+  .hero::before { content: ''; position: absolute; top: 20%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: var(--accent); filter: blur(200px); opacity: 0.15; z-index: -1; border-radius: 50%; }
+  .hero-content { text-align: center; max-width: 800px; margin: 0 auto; }
+  .hero h1 { font-size: clamp(40px, 7vw, 72px); font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { font-size: clamp(16px, 2vw, 20px); color: var(--text-muted); margin-bottom: 40px; max-width: 600px; margin-inline: auto; }
+  .hero-actions { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+
+  /* УСЛУГИ */
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 30px; }
+  .card { background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); padding: 40px 30px; border-radius: 20px; border: 1px solid var(--border); transition: all 0.4s var(--smooth); position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--smooth); }
+  .card:hover { border-color: rgba(16, 185, 129, 0.3); transform: translateY(-8px); background: rgba(22, 22, 22, 0.85); }
+  .card:hover::before { transform: scaleX(1); }
+  .card-icon { width: 50px; height: 50px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--accent); }
+  .card-icon svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .card h3 { font-size: 22px; margin-bottom: 15px; color: var(--text); }
+  .card p { color: var(--text-muted); font-size: 15px; }
+
+  /* ПОРТФОЛИО */
+  #portfolio { background: transparent; }
+  .portfolio-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); 
+    gap: 20px; 
+  }
+  .portfolio-item { 
+    border-radius: 16px; overflow: hidden; border: 1px solid var(--border); 
+    background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); transition: 0.4s var(--smooth); cursor: pointer; position: relative; 
+  }
+  .portfolio-item:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  
+  .portfolio-img-wrapper { 
+    width: 100%; aspect-ratio: 16/10; position: relative; overflow: hidden; 
+    background: rgba(10, 10, 10, 0.7); display: flex; align-items: center; justify-content: center; 
+  }
+  .portfolio-placeholder { 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; 
+    gap: 10px; color: var(--text-muted); width: 100%; height: 100%; padding: 20px; text-align: center;
+  }
+  .portfolio-placeholder svg { width: 40px; height: 40px; stroke: var(--accent); fill: none; stroke-width: 1.5; opacity: 0.6; }
+  .portfolio-placeholder span { font-size: 13px; font-weight: 600; }
+  
+  .portfolio-overlay { position: absolute; inset: 0; background: rgba(5, 5, 5, 0.75); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+  .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+  .portfolio-overlay span { background: var(--accent); color: #000; padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; transform: translateY(10px); transition: transform 0.3s ease; }
+  .portfolio-item:hover .portfolio-overlay span { transform: translateY(0); }
+  
+  .portfolio-info { padding: 20px; }
+  .portfolio-info p { color: var(--accent); font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+
+  /* ПРЕИМУЩЕСТВА */
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .feature-list { display: flex; flex-direction: column; gap: 25px; }
+  .feature-item { display: flex; gap: 15px; }
+  .feature-icon { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #000; font-weight: bold; }
+  .feature-text h4 { font-size: 18px; margin-bottom: 5px; }
+  .feature-text p { color: var(--text-muted); font-size: 15px; }
+  
+  .features-image { background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); border-radius: 20px; padding: 25px; border: 1px solid var(--border); position: relative; overflow: hidden; min-height: 320px; display: flex; flex-direction: column; }
+
+  /* ТЕРМИНАЛ */
+  .code-preview {
+    font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8;
+    color: var(--accent); text-align: left; transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .code-preview.hidden { opacity: 0; transform: scale(0.95); pointer-events: none; position: absolute; }
+  .code-preview .c { color: #888; }
+  .code-preview .t { color: #f472b6; }
+  .code-preview .a { color: #60a5fa; }
+  .code-preview .v { color: #fbbf24; }
+
+  .terminal-wrapper {
+    display: none; flex-direction: column; flex-grow: 1; width: 100%;
+    background: #000; border-radius: 12px; border: 1px solid #333; overflow: hidden;
+    font-family: 'Courier New', Courier, monospace; text-align: left;
+  }
+  .terminal-wrapper.active { display: flex; }
+  .terminal-header {
+    background: #1a1a1a; padding: 8px 12px; display: flex; align-items: center; gap: 6px;
+    border-bottom: 1px solid #333;
+  }
+  .terminal-header span { width: 10px; height: 10px; border-radius: 50%; }
+  .terminal-header span:nth-child(1) { background: #ff5f56; }
+  .terminal-header span:nth-child(2) { background: #ffbd2e; }
+  .terminal-header span:nth-child(3) { background: #27c93f; }
+  .terminal-title { margin-left: auto; font-size: 11px; color: #666; font-family: monospace; }
+  .terminal-body {
+    padding: 15px; flex-grow: 1; overflow-y: auto; height: 260px;
+    font-size: 13px; line-height: 1.5; color: #ccc; white-space: pre-wrap; word-break: break-all;
+    scrollbar-width: thin; scrollbar-color: #333 #000;
+  }
+  .terminal-body::-webkit-scrollbar { width: 6px; }
+  .terminal-body::-webkit-scrollbar-track { background: #000; }
+  .terminal-body::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+  .terminal-body .t-accent { color: var(--accent); }
+  .terminal-body .t-dim { color: #666; }
+  .terminal-body .t-error { color: #ef4444; }
+  .terminal-body .t-white { color: #fff; font-weight: bold; }
+  .cursor { display: inline-block; width: 8px; height: 14px; background: var(--accent); vertical-align: middle; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .btn-run {
+    margin-top: 20px; width: 100%; padding: 14px; background: transparent; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 10px; font-weight: 700; font-size: 15px;
+    cursor: pointer; font-family: inherit; transition: all 0.3s ease;
+  }
+  .btn-run:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+  .btn-run:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-run .hint { display: block; font-size: 12px; font-weight: 400; color: #f59e0b; margin-top: 5px; }
+
+  /* КОНТАКТЫ */
+  .contact-section { background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .contact-form { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+  .form-group input, .form-group textarea { width: 100%; padding: 16px; background: rgba(5, 5, 5, 0.7); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: inherit; font-size: 16px; transition: 0.3s; }
+  .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .contact-form .btn { width: 100%; padding: 18px; font-size: 16px; }
+
+  /* ПОДВАЛ */
+  .footer { padding: 40px 0; text-align: center; color: var(--text-muted); font-size: 14px; background: rgba(5, 5, 5, 0.7); backdrop-filter: blur(8px); }
+
+  /* АНИМАЦИИ */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s var(--smooth); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* ================= МИНИ-БРАУЗЕР (СТИЛЬ АВТОАЗБУКИ) ================= */
+  .modal-overlay { 
+    position: fixed; inset: 0; 
+    background: rgba(0, 0, 0, 0.85); 
+    backdrop-filter: blur(10px); 
+    z-index: 2000; 
+    display: flex; align-items: center; justify-content: center; 
+    padding: 20px; 
+    opacity: 0; pointer-events: none; 
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .browser-window { 
+    width: 100%; max-width: 1100px; height: 85vh; 
+    background: #151515; 
+    border-radius: 16px; 
+    display: flex; flex-direction: column; 
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255,255,255,0.1); 
+    border: 1px solid var(--border); 
+    transform: translateY(30px) scale(0.96); 
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+    overflow: hidden; 
+  }
+  .modal-overlay.open .browser-window { transform: translateY(0) scale(1); }
+
+  .browser-header { 
+    background: #1e1e1e; padding: 14px 20px; 
+    display: flex; align-items: center; gap: 15px; 
+    border-bottom: 1px solid #111; 
+  }
+  .browser-dots { display: flex; gap: 8px; }
+  .browser-dots span { width: 12px; height: 12px; border-radius: 50%; background: #555; }
+  
+  .browser-dots span:nth-child(1) { background: #ff5f56; cursor: pointer; position: relative; transition: 0.2s; }
+  .browser-dots span:nth-child(1):hover { background: #e0443e; }
+  .browser-dots span:nth-child(1)::after { 
+    content: '×'; color: #4a0000; font-size: 11px; font-weight: bold; 
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+    opacity: 0; transition: opacity 0.2s; 
+  }
+  .browser-dots span:nth-child(1):hover::after { opacity: 1; }
+
+  .browser-dots span:nth-child(2) { background: #ffbd2e; }
+  .browser-dots span:nth-child(3) { background: #27c93f; }
+
+  .browser-address { 
+    flex-grow: 1; 
+    background: #111; 
+    border-radius: 8px; 
+    padding: 8px 16px; 
+    color: #aaa; 
+    font-size: 13px; 
+    font-family: monospace; 
+    display: flex; align-items: center; gap: 10px; 
+  }
+  .browser-address svg { width: 12px; height: 12px; fill: #666; }
+
+  .browser-actions { display: flex; gap: 10px; }
+  .browser-open-tab { 
+    background: var(--accent); color: #000; 
+    border: none; padding: 8px 16px; border-radius: 8px; 
+    font-size: 13px; font-weight: 700; 
+    cursor: pointer; transition: 0.3s; 
+    text-decoration: none; display: flex; align-items: center; 
+  }
+  .browser-open-tab:hover { background: var(--accent-hover); }
+
+  .browser-body { flex-grow: 1; background: #000; position: relative; }
+  .browser-iframe { width: 100%; height: 100%; border: none; display: block; background: #0d0d0d; }
+
+  @media (max-width: 900px) {
+    .nav { display: none; }
+  }
+  @media (max-width: 768px) {
+    .header-inner { justify-content: center; gap: 10px; flex-wrap: wrap; height: auto; padding: 12px 0; }
+    .header-actions { flex-wrap: wrap; justify-content: center; }
+    .features { grid-template-columns: 1fr; }
+    .hero-actions { flex-direction: column; }
+    .hero-actions .btn { width: 100%; }
+    section { padding: 60px 0; }
+    .card { padding: 30px 20px; }
+    .browser-window { height: 90vh; }
+    .browser-address { display: none; }
+    .browser-header { justify-content: space-between; }
+    .features-image { min-height: 300px; }
+    .terminal-body { height: 220px; font-size: 12px; }
+    .btn-discount { font-size: 12px; padding: 8px 12px; }
+    .btn { padding: 10px 16px; font-size: 13px; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<script>
+  // Принудительный сброс скролла в начало при загрузке/обновлении
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
+</script>
+
+<!-- ГЛОБАЛЬНЫЙ ФОН С БЕГУЩИМ КОДОМ -->
+<div class="global-code-bg" id="globalCodeBg"></div>
+
+<!-- ПРЕЛОАДЕР -->
+<div class="preloader-overlay" id="preloader">
+  <div class="code-background" id="codeBackground"></div>
+  <div class="logo-composition">
+    <div class="full-logo">
+      <span class="letter-x">X</span><span>LMNR</span>
+    </div>
+    <div class="slogan">Создаю <span>сайты/лендинги</span>, которые приносят клиентов</div>
+  </div>
+</div>
+
+<script>
+  // ================= ГЕНЕРАЦИЯ БЕГУЩЕГО КОДА =================
+  const codeLines = [
+    'const express = require("express");',
+    'app.use(express.json());',
+    'router.get("/api/users", async (req, res) => {',
+    '  const users = await db.query("SELECT * FROM users");',
+    '  res.json(users);',
+    '});',
+    'function initApp() {',
+    '  return new Promise((resolve) => setTimeout(resolve, 1000));',
+    '}',
+    'const PORT = process.env.PORT || 3000;',
+    'app.listen(PORT, () => console.log("Server running"));',
+    'export default class UserController {',
+    '  async getUser(id) { return this.model.findById(id); }',
+    '}',
+    '// TODO: optimize this function',
+    'function calculateTotal(items) {',
+    '  return items.reduce((sum, item) => sum + item.price, 0);',
+    '}',
+    'if (process.env.NODE_ENV === "production") {',
+    '  app.use(compression());',
+    '}',
+    'const config = { apiKey: "sk_live_...", timeout: 5000 };',
+    'await fetch("/api/data", { method: "POST" });',
+    'class User extends Model {',
+    '  static get tableName() { return "users"; }',
+    '}',
+    'const isValid = email.includes("@");',
+    'while (queue.length > 0) {',
+    '  const task = queue.shift();',
+    '  await task();',
+    '}',
+    '// FIXME: memory leak',
+    'window.addEventListener("resize", debounce(handler, 200));',
+    'const result = arr.filter(x => x !== null).map(x => x * 2);',
+    'Promise.all([fetchA(), fetchB()]).then(([a, b]) => console.log(a, b));',
+    'git commit -m "fix: resolve issue"',
+    'npm install --save-dev typescript',
+    'docker-compose up -d --build',
+    'SELECT * FROM orders WHERE status = "pending";',
+    'function debounce(fn, delay) {',
+    '  let timer;',
+    '  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };',
+    '}',
+  ];
+
+  function generateCodeText(linesCount) {
+    let text = '';
+    for (let i = 0; i < linesCount; i++) {
+      text += codeLines[Math.floor(Math.random() * codeLines.length)] + '\n';
+    }
+    return text;
+  }
+
+  function createCodeColumns(container, count, widthPercent, linesPerCol) {
+    for (let i = 0; i < count; i++) {
+      const column = document.createElement('div');
+      column.className = 'code-column';
+      column.style.animationDuration = (40 + Math.random() * 60) + 's';
+      column.style.animationDelay = (Math.random() * 15) + 's';
+      column.style.left = (i * widthPercent) + '%';
+      column.style.width = widthPercent + '%';
+      column.textContent = generateCodeText(linesPerCol);
+      container.appendChild(column);
+    }
+  }
+
+  // Глобальный фон
+  const globalCodeBg = document.getElementById('globalCodeBg');
+  createCodeColumns(globalCodeBg, 8, 12.5, 60);
+
+  // Фон прелоадера
+  const codeBackground = document.getElementById('codeBackground');
+  createCodeColumns(codeBackground, 6, 16, 40);
+
+  // ================= ПРЕЛОАДЕР =================
+  (function() {
+    const preloader = document.getElementById('preloader');
+    
+    preloader.classList.remove('hidden', 'show-logo', 'flash-green');
+    
+    setTimeout(() => { preloader.classList.add('show-logo'); }, 300);
+    setTimeout(() => { preloader.classList.add('flash-green'); }, 2500);
+    setTimeout(() => { 
+      preloader.classList.add('hidden'); 
+      document.getElementById('mainHeader').classList.add('show');
+    }, 5500);
+  })();
+</script>
+
+<!-- ШАПКА -->
+<header class="header" id="mainHeader">
+  <div class="container header-inner">
+    <a href="#" class="logo"><span>X</span>LMNR</a>
+    <nav class="nav">
+      <a href="#services">Услуги</a>
+      <a href="#portfolio">Портфолио</a>
+      <a href="#benefits">Преимущества</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <div class="header-actions">
+      <a href="#contact" class="btn">Обсудить проект</a>
+      <button class="btn-discount" id="discountBtn">Получить скидку</button>
+    </div>
+  </div>
+</header>
+
+<!-- ГЛАВНЫЙ ЭКРАН -->
+<section class="hero">
+  <div class="container hero-content">
+    <h1 class="reveal">Сайты, <br>которые <span>приносят клиентов</span></h1>
+    <p class="reveal">Современный дизайн, идеальная адаптация под телефоны и удобные админ-панели.</p>
+    <div class="hero-actions reveal">
+      <a href="#contact" class="btn">Заказать сайт</a>
+      <a href="#portfolio" class="btn btn-outline">Смотреть работы</a>
+    </div>
+  </div>
+</section>
+
+<!-- УСЛУГИ -->
+<section id="services">
+  <div class="container">
+    <h2 class="section-title reveal">Наши <span>услуги</span></h2>
+    <p class="section-subtitle reveal">Решаем конкретные бизнес-задачи с помощью кода.</p>
+    <div class="grid-3">
+      <div class="card reveal">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></div>
+        <h3>Лендинги (Landing Page)</h3>
+        <p>Продающие одностраничники для услуг. Идеально для запуска рекламы и быстрого получения заявок.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></div>
+        <h3>Корпоративные сайты</h3>
+        <p>Многостраничные сайты для компаний. Солидный имидж, каталог товаров и история компании.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
+        <h3>Сложный функционал</h3>
+        <p>Разработка кастомных решений, интеграция с базами данных, CRM-системами и платежными шлюзами.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ПОРТФОЛИО -->
+<section id="portfolio">
+  <div class="container">
+    <h2 class="section-title reveal">Наши <span>работы</span></h2>
+    <p class="section-subtitle reveal">Нажмите на карточку, чтобы открыть сайт прямо в окне браузера.</p>
+    <div class="portfolio-grid">
+      
+      <!-- Карточка 1: Автосервис -->
+      <div class="portfolio-item reveal" id="openAutoazbuka">
+        <div class="portfolio-img-wrapper">
+          <div class="portfolio-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <span>Автосервис</span>
+          </div>
+          <div class="portfolio-overlay"><span>Смотреть сайт</span></div>
+        </div>
+        <div class="portfolio-info">
+          <p>Автосервис • Сайт под ключ</p>
+        </div>
+      </div>
+
+      <!-- Карточка 2: Заглушка -->
+      <div class="portfolio-item reveal">
+        <div class="portfolio-img-wrapper">
+          <div class="portfolio-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+            <span>Скоро</span>
+          </div>
+        </div>
+        <div class="portfolio-info">
+          <p>Новый проект • В разработке</p>
+        </div>
+      </div>
+
+      <!-- Карточка 3: Заглушка -->
+      <div class="portfolio-item reveal">
+        <div class="portfolio-img-wrapper">
+          <div class="portfolio-placeholder">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            <span>Скоро</span>
+          </div>
+        </div>
+        <div class="portfolio-info">
+          <p>Новый проект • В разработке</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- МИНИ-БРАУЗЕР -->
+<div class="modal-overlay" id="browserModal">
+  <div class="browser-window">
+    <div class="browser-header">
+      <div class="browser-dots">
+        <span id="dotClose" title="Закрыть"></span>
+        <span></span><span></span>
+      </div>
+      <div class="browser-address">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        autoservice
+      </div>
+      <div class="browser-actions">
+        <a href="autoservice/avtoazbuka.html" target="_blank" class="browser-open-tab">Открыть в новой вкладке</a>
+      </div>
+    </div>
+    <div class="browser-body">
+      <iframe class="browser-iframe" src="autoservice/avtoazbuka.html" title="АвтоАзбука" loading="lazy"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ПРЕИМУЩЕСТВА + ТЕРМИНАЛ -->
+<section id="benefits">
+  <div class="container">
+    <div class="features">
+      <div class="reveal">
+        <h2 class="section-title" style="text-align: left; margin-bottom: 30px;">Почему стоит <span>работать с нами</span></h2>
+        <div class="feature-list">
+          <div class="feature-item"><div class="feature-icon">✓</div><div class="feature-text"><h4>Идеальный мобильный вид</h4><p>Более 80% клиентов заходят с телефонов. Ваш сайт будет летать на любых экранах.</p></div></div>
+          <div class="feature-item"><div class="feature-icon">✓</div><div class="feature-text"><h4>Скорость загрузки</h4><p>Мы пишем чистый код без тяжелых конструкторов. Google любит быстрые сайты и поднимает их в поиске.</p></div></div>
+          <div class="feature-item"><div class="feature-icon">✓</div><div class="feature-text"><h4>Честные сроки и цены</h4><p>Работаем по четкому ТЗ. Вы всегда знаете, на каком этапе находится проект.</p></div></div>
+        </div>
+      </div>
+      
+      <div class="features-image reveal" id="featuresImage">
+        <div class="code-preview" id="codePreview">
+          <span class="c">&lt;!-- Ваш идеальный сайт --&gt;</span><br>
+          &lt;<span class="t">section</span> <span class="a">class</span>=<span class="v">"success"</span>&gt;<br>
+          &nbsp;&nbsp;&lt;<span class="t">h1</span>&gt;Приносит клиентов&lt;/<span class="t">h1</span>&gt;<br>
+          &nbsp;&nbsp;&lt;<span class="t">button</span>&gt;Оставить заявку&lt;/<span class="t">button</span>&gt;<br>
+          &lt;/<span class="t">section</span>&gt;
+        </div>
+
+        <div class="terminal-wrapper" id="terminalWrapper">
+          <div class="terminal-header">
+            <span></span><span></span><span></span>
+            <div class="terminal-title">xlmr — bash</div>
+          </div>
+          <div class="terminal-body" id="terminalBody"></div>
+        </div>
+
+        <button class="btn-run" id="btnRunCode">▶ Запустить код<span class="hint">Дочитай до конца и получи подарок</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- КОНТАКТЫ -->
+<section id="contact" class="contact-section">
+  <div class="container">
+    <h2 class="section-title reveal">Давайте <span>работать</span></h2>
+    <p class="section-subtitle reveal">Оставьте заявку, и мы свяжемся с вами для обсуждения деталей.</p>
+    <form class="contact-form reveal" id="contactForm">
+      <div class="form-group"><label>Ваше имя</label><input type="text" placeholder="Иван" required></div>
+      <div class="form-group"><label>Телефон или Telegram</label><input type="text" placeholder="+7 (999) 000-00-00" required></div>
+      <div class="form-group"><label>Какой сайт вам нужен?</label><textarea placeholder="Расскажите пару слов о вашем проекте..." required></textarea></div>
+      <button type="submit" class="btn">Отправить заявку</button>
+    </form>
+  </div>
+</section>
+
+<!-- ПОДВАЛ -->
+<footer class="footer">
+  <div class="container">
+    <p>&copy; <span id="year"></span> XLMNR. Создание сайтов под ключ.</p>
+  </div>
+</footer>
+
+<script>
+  // ОСТАЛЬНЫЕ СКРИПТЫ
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // REVEAL
+  const revealElements = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('in'); revealObserver.unobserve(entry.target); }
+    });
+  }, { threshold: 0.1 });
+  revealElements.forEach(el => revealObserver.observe(el));
+
+  // МИНИ-БРАУЗЕР
+  const modal = document.getElementById('browserModal');
+  const openBtn = document.getElementById('openAutoazbuka');
+  const dotClose = document.getElementById('dotClose');
+
+  openBtn.addEventListener('click', () => {
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+
+  dotClose.addEventListener('click', () => {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+
+  modal.addEventListener('click', (e) => { 
+    if (e.target === modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
+  });
+
+  document.addEventListener('keydown', (e) => { 
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // КНОПКА "ПОЛУЧИТЬ СКИДКУ" — скролл к терминалу и автозапуск
+  const discountBtn = document.getElementById('discountBtn');
+  const benefitsSection = document.getElementById('benefits');
+  
+  discountBtn.addEventListener('click', () => {
+    benefitsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => {
+      if (!isTerminalRunning) {
+        btnRun.click();
+      }
+    }, 800);
+  });
+
+  // ТЕРМИНАЛ
+  const btnRun = document.getElementById('btnRunCode');
+  const codePreview = document.getElementById('codePreview');
+  const terminalWrapper = document.getElementById('terminalWrapper');
+  const terminalBody = document.getElementById('terminalBody');
+  let isTerminalRunning = false;
+
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  async function typeText(text, speed = 30, className = '') {
+    const span = document.createElement('span');
+    if (className) span.className = className;
+    terminalBody.appendChild(span);
+    
+    for (let i = 0; i < text.length; i++) {
+      span.textContent += text[i];
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+      await sleep(speed + (Math.random() * 20 - 10));
+    }
+    return span;
+  }
+
+  async function spamCompilation() {
+    const chars = '01{}[]<>/\\|&^%$#@!*()-_+=~`АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯabcdefghijklmnopqrstuvwxyz0123456789';
+    const spamLine = document.createElement('div');
+    spamLine.className = 't-dim';
+    terminalBody.appendChild(spamLine);
+    
+    for (let i = 0; i < 40; i++) {
+      let str = '';
+      for (let j = 0; j < 30; j++) {
+        str += chars[Math.floor(Math.random() * chars.length)];
+      }
+      spamLine.textContent = str;
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+      await sleep(20);
+    }
+    spamLine.textContent = '';
+  }
+
+  function crumbleEffect(element) {
+    element.style.transition = 'none';
+    element.style.opacity = '1';
+    
+    const rect = element.getBoundingClientRect();
+    const particlesCount = 60;
+    
+    for (let i = 0; i < particlesCount; i++) {
+      const p = document.createElement('div');
+      p.style.position = 'absolute';
+      p.style.width = '3px';
+      p.style.height = '3px';
+      p.style.background = '#10b981';
+      p.style.left = Math.random() * rect.width + 'px';
+      p.style.top = Math.random() * rect.height + 'px';
+      p.style.opacity = '1';
+      p.style.transition = `transform ${0.8 + Math.random()}s ease-out, opacity ${0.8 + Math.random()}s ease-out`;
+      p.style.pointerEvents = 'none';
+      element.appendChild(p);
+      
+      requestAnimationFrame(() => {
+        p.style.transform = `translate(${(Math.random() - 0.5) * 150}px, ${100 + Math.random() * 100}px) rotate(${Math.random() * 360}deg)`;
+        p.style.opacity = '0';
+      });
+    }
+    
+    element.style.opacity = '0';
+    element.style.transform = 'scale(0.95)';
+    
+    setTimeout(() => {
+      element.innerHTML = '';
+      element.style.opacity = '1';
+      element.style.transform = 'none';
+    }, 2000);
+  }
+
+  btnRun.addEventListener('click', async () => {
+    if (isTerminalRunning) return;
+    isTerminalRunning = true;
+    btnRun.disabled = true;
+    btnRun.textContent = 'Выполняется...';
+    btnRun.style.opacity = '0.5';
+
+    crumbleEffect(codePreview);
+    
+    await sleep(300);
+    codePreview.style.position = 'absolute';
+    codePreview.style.opacity = '0';
+    
+    terminalWrapper.classList.add('active');
+    terminalBody.innerHTML = '';
+    
+    await sleep(500);
+
+    await typeText('user@xlmr:~$ ', 50, 't-accent');
+    await typeText('color 2\n', 60, 't-white');
+    await sleep(200);
+    
+    await typeText('user@xlmr:~$ ', 50, 't-accent');
+    await typeText('создать крутой сайт\n', 60, 't-white');
+    await sleep(300);
+
+    const files = [
+      'C:\\XLMNR\\index.html',
+      'C:\\XLMNR\\styles.css',
+      'C:\\XLMNR\\script.js',
+      'C:\\XLMNR\\images\\logo.png',
+      'C:\\XLMNR\\projects\\autoazbuka.html',
+      'C:\\XLMNR\\projects\\landing_page.html'
+    ];
+    for (const file of files) {
+      await typeText(file + '\n', 30, 't-dim');
+      await sleep(80);
+    }
+    await typeText('\n', 10);
+
+    const htmlCode = [
+      '<!DOCTYPE html>',
+      '<html lang="ru">',
+      '<head>',
+      '  <meta charset="UTF-8">',
+      '  <title>Идеальный сайт</title>',
+      '</head>',
+      '<body>',
+      '  <h1>Приносит клиентов</h1>',
+      '  <button>Оставить заявку</button>',
+      '</body>',
+      '</html>'
+    ];
+    
+    for (const line of htmlCode) {
+      await typeText(line + '\n', 20, 't-accent');
+      await sleep(50);
+    }
+    
+    await sleep(300);
+
+    await typeText('> Компиляция проекта...\n', 30, 't-white');
+    await sleep(200);
+    await spamCompilation();
+    await sleep(200);
+
+    await typeText('> // Компиляция завершена успешно.\n', 30, 't-accent');
+    await sleep(400);
+    await typeText('> // Ты дочитал до конца? Уважаем.\n', 30, 't-accent');
+    await sleep(400);
+    await typeText('> // Держи промокод на скидку 10%: XLMNR10\n', 30, 't-white');
+    await sleep(400);
+    await typeText('> // Просто упомяни его при заказе. 😉\n', 30, 't-dim');
+    await sleep(500);
+    
+    const cursorLine = document.createElement('div');
+    cursorLine.innerHTML = 'user@xlmr:~$ <span class="cursor"></span>';
+    cursorLine.className = 't-accent';
+    terminalBody.appendChild(cursorLine);
+    terminalBody.scrollTop = terminalBody.scrollHeight;
+
+    btnRun.textContent = '▶ Запустить код';
+    btnRun.disabled = false;
+    btnRun.style.opacity = '1';
+    isTerminalRunning = false;
+  });
+
+  // ФОРМА (заглушка)
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button');
+    const originalText = btn.textContent;
+    btn.textContent = 'Отправляется...';
+    btn.style.background = '#059669'; 
+    setTimeout(() => {
+      btn.textContent = 'Заявка отправлена!';
+      this.reset();
+      setTimeout(() => { btn.textContent = originalText; btn.style.background = ''; }, 3000);
+    }, 1000);
+  });
+</script>
+</body>
+</html>
