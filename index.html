@@ -21,115 +21,57 @@
 
   /* ================= ГЛОБАЛЬНЫЙ ФОН С БЕГУЩИМ КОДОМ ================= */
   .global-code-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
-    opacity: 0.10;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--accent);
-    white-space: pre;
-    filter: blur(0.4px);
+    position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+    opacity: 0.10; font-family: 'Courier New', Courier, monospace; font-size: 13px;
+    line-height: 1.6; color: var(--accent); white-space: pre; filter: blur(0.4px);
   }
   .global-code-bg .code-column {
-    position: absolute;
-    top: -100%;
-    width: 12.5%;
-    height: 200%;
+    position: absolute; top: -100%; width: 12.5%; height: 200%;
     animation: scrollCode linear infinite;
   }
-  @keyframes scrollCode {
-    from { transform: translateY(0); }
-    to { transform: translateY(50%); }
-  }
+  @keyframes scrollCode { from { transform: translateY(0); } to { transform: translateY(50%); } }
 
   /* ================= ПРЕЛОАДЕР ================= */
   .preloader-overlay {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 99999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    position: fixed; inset: 0; background: var(--bg); z-index: 99999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     transition: opacity 1s cubic-bezier(0.65, 0, 0.35, 1), visibility 1s cubic-bezier(0.65, 0, 0.35, 1);
   }
-  .preloader-overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
+  .preloader-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
   .preloader-overlay .code-background {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    opacity: 0;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--accent);
-    white-space: pre;
-    filter: blur(0.5px);
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0;
+    font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.6;
+    color: var(--accent); white-space: pre; filter: blur(0.5px);
     animation: fadeInBg 3s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   }
-  @keyframes fadeInBg {
-    from { opacity: 0; }
-    to { opacity: 0.15; }
-  }
-  .logo-composition {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-  }
+  @keyframes fadeInBg { from { opacity: 0; } to { opacity: 0.15; } }
+  .logo-composition { position: relative; z-index: 2; text-align: center; }
   .full-logo {
-    font-size: clamp(60px, 15vw, 120px);
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    display: flex;
-    justify-content: center;
-    gap: 2px;
-    opacity: 0;
-    transform: scale(0.9);
+    font-size: clamp(60px, 15vw, 120px); font-weight: 800; letter-spacing: 0.05em;
+    display: flex; justify-content: center; gap: 2px; opacity: 0; transform: scale(0.9);
     transition: opacity 1.5s cubic-bezier(0.65, 0, 0.35, 1), transform 1.5s cubic-bezier(0.65, 0, 0.35, 1);
     text-shadow: 0 0 30px rgba(0,0,0,0.8);
   }
-  .preloader-overlay.show-logo .full-logo {
-    opacity: 1;
-    transform: scale(1);
-  }
+  .preloader-overlay.show-logo .full-logo { opacity: 1; transform: scale(1); }
   .letter-x {
-    color: var(--text);
-    transition: color 1.2s cubic-bezier(0.65, 0, 0.35, 1), text-shadow 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+    color: var(--text); transition: color 1.2s cubic-bezier(0.65, 0, 0.35, 1), text-shadow 1.2s cubic-bezier(0.65, 0, 0.35, 1);
   }
   .preloader-overlay.flash-green .letter-x {
     color: var(--accent);
     text-shadow: 0 0 30px rgba(16,185,129,0.9), 0 0 60px rgba(16,185,129,0.6), 0 0 100px rgba(16,185,129,0.4);
   }
   .slogan {
-    margin-top: 30px;
-    font-size: clamp(14px, 3vw, 18px);
-    color: #9ca3af;
-    opacity: 0;
-    transform: translateY(15px);
+    margin-top: 30px; font-size: clamp(14px, 3vw, 18px); color: #9ca3af; opacity: 0; transform: translateY(15px);
     transition: opacity 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.4s, transform 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.4s;
   }
-  .preloader-overlay.flash-green .slogan {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .preloader-overlay.flash-green .slogan { opacity: 1; transform: translateY(0); }
   .slogan span { color: var(--accent); font-weight: 600; }
 
   /* ШАПКА */
   .header { 
     position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
     background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(10px); 
-    border-bottom: 1px solid var(--border); 
-    transform: translateY(-100%); 
+    border-bottom: 1px solid var(--border); transform: translateY(-100%); 
     transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
   }
   .header.show { transform: translateY(0); }
@@ -143,8 +85,6 @@
   .btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
   .btn-outline { background: transparent; color: var(--accent); border: 2px solid var(--accent); }
   .btn-outline:hover { background: rgba(16, 185, 129, 0.1); box-shadow: none; }
-
-  /* Кнопки в шапке */
   .header-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
   
   .btn-discount {
@@ -187,33 +127,17 @@
 
   /* ПОРТФОЛИО */
   #portfolio { background: transparent; }
-  .portfolio-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); 
-    gap: 20px; 
-  }
-  .portfolio-item { 
-    border-radius: 16px; overflow: hidden; border: 1px solid var(--border); 
-    background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); transition: 0.4s var(--smooth); cursor: pointer; position: relative; 
-  }
+  .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
+  .portfolio-item { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); transition: 0.4s var(--smooth); cursor: pointer; position: relative; }
   .portfolio-item:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-  
-  .portfolio-img-wrapper { 
-    width: 100%; aspect-ratio: 16/10; position: relative; overflow: hidden; 
-    background: rgba(10, 10, 10, 0.7); display: flex; align-items: center; justify-content: center; 
-  }
-  .portfolio-placeholder { 
-    display: flex; flex-direction: column; align-items: center; justify-content: center; 
-    gap: 10px; color: var(--text-muted); width: 100%; height: 100%; padding: 20px; text-align: center;
-  }
+  .portfolio-img-wrapper { width: 100%; aspect-ratio: 16/10; position: relative; overflow: hidden; background: rgba(10, 10, 10, 0.7); display: flex; align-items: center; justify-content: center; }
+  .portfolio-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--text-muted); width: 100%; height: 100%; padding: 20px; text-align: center; }
   .portfolio-placeholder svg { width: 40px; height: 40px; stroke: var(--accent); fill: none; stroke-width: 1.5; opacity: 0.6; }
   .portfolio-placeholder span { font-size: 13px; font-weight: 600; }
-  
   .portfolio-overlay { position: absolute; inset: 0; background: rgba(5, 5, 5, 0.75); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
   .portfolio-item:hover .portfolio-overlay { opacity: 1; }
   .portfolio-overlay span { background: var(--accent); color: #000; padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; transform: translateY(10px); transition: transform 0.3s ease; }
   .portfolio-item:hover .portfolio-overlay span { transform: translateY(0); }
-  
   .portfolio-info { padding: 20px; }
   .portfolio-info p { color: var(--accent); font-size: 13px; font-weight: 600; margin-bottom: 5px; }
 
@@ -224,40 +148,25 @@
   .feature-icon { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #000; font-weight: bold; }
   .feature-text h4 { font-size: 18px; margin-bottom: 5px; }
   .feature-text p { color: var(--text-muted); font-size: 15px; }
-  
   .features-image { background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); border-radius: 20px; padding: 25px; border: 1px solid var(--border); position: relative; overflow: hidden; min-height: 320px; display: flex; flex-direction: column; }
 
   /* ТЕРМИНАЛ */
-  .code-preview {
-    font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8;
-    color: var(--accent); text-align: left; transition: opacity 0.4s ease, transform 0.4s ease;
-  }
+  .code-preview { font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.8; color: var(--accent); text-align: left; transition: opacity 0.4s ease, transform 0.4s ease; }
   .code-preview.hidden { opacity: 0; transform: scale(0.95); pointer-events: none; position: absolute; }
   .code-preview .c { color: #888; }
   .code-preview .t { color: #f472b6; }
   .code-preview .a { color: #60a5fa; }
   .code-preview .v { color: #fbbf24; }
 
-  .terminal-wrapper {
-    display: none; flex-direction: column; flex-grow: 1; width: 100%;
-    background: #000; border-radius: 12px; border: 1px solid #333; overflow: hidden;
-    font-family: 'Courier New', Courier, monospace; text-align: left;
-  }
+  .terminal-wrapper { display: none; flex-direction: column; flex-grow: 1; width: 100%; background: #000; border-radius: 12px; border: 1px solid #333; overflow: hidden; font-family: 'Courier New', Courier, monospace; text-align: left; }
   .terminal-wrapper.active { display: flex; }
-  .terminal-header {
-    background: #1a1a1a; padding: 8px 12px; display: flex; align-items: center; gap: 6px;
-    border-bottom: 1px solid #333;
-  }
+  .terminal-header { background: #1a1a1a; padding: 8px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #333; }
   .terminal-header span { width: 10px; height: 10px; border-radius: 50%; }
   .terminal-header span:nth-child(1) { background: #ff5f56; }
   .terminal-header span:nth-child(2) { background: #ffbd2e; }
   .terminal-header span:nth-child(3) { background: #27c93f; }
   .terminal-title { margin-left: auto; font-size: 11px; color: #666; font-family: monospace; }
-  .terminal-body {
-    padding: 15px; flex-grow: 1; overflow-y: auto; height: 260px;
-    font-size: 13px; line-height: 1.5; color: #ccc; white-space: pre-wrap; word-break: break-all;
-    scrollbar-width: thin; scrollbar-color: #333 #000;
-  }
+  .terminal-body { padding: 15px; flex-grow: 1; overflow-y: auto; height: 260px; font-size: 13px; line-height: 1.5; color: #ccc; white-space: pre-wrap; word-break: break-all; scrollbar-width: thin; scrollbar-color: #333 #000; }
   .terminal-body::-webkit-scrollbar { width: 6px; }
   .terminal-body::-webkit-scrollbar-track { background: #000; }
   .terminal-body::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
@@ -268,11 +177,7 @@
   .cursor { display: inline-block; width: 8px; height: 14px; background: var(--accent); vertical-align: middle; animation: blink 1s step-end infinite; }
   @keyframes blink { 50% { opacity: 0; } }
 
-  .btn-run {
-    margin-top: 20px; width: 100%; padding: 14px; background: transparent; color: var(--accent);
-    border: 1px solid var(--accent); border-radius: 10px; font-weight: 700; font-size: 15px;
-    cursor: pointer; font-family: inherit; transition: all 0.3s ease;
-  }
+  .btn-run { margin-top: 20px; width: 100%; padding: 14px; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 10px; font-weight: 700; font-size: 15px; cursor: pointer; font-family: inherit; transition: all 0.3s ease; }
   .btn-run:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
   .btn-run:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-run .hint { display: block; font-size: 12px; font-weight: 400; color: #f59e0b; margin-top: 5px; }
@@ -294,80 +199,26 @@
   .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s var(--smooth); }
   .reveal.in { opacity: 1; transform: translateY(0); }
 
-  /* ================= МИНИ-БРАУЗЕР (СТИЛЬ АВТОАЗБУКИ) ================= */
-  .modal-overlay { 
-    position: fixed; inset: 0; 
-    background: rgba(0, 0, 0, 0.85); 
-    backdrop-filter: blur(10px); 
-    z-index: 2000; 
-    display: flex; align-items: center; justify-content: center; 
-    padding: 20px; 
-    opacity: 0; pointer-events: none; 
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-  }
+  /* ================= МИНИ-БРАУЗЕР ================= */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
   .modal-overlay.open { opacity: 1; pointer-events: auto; }
-
-  .browser-window { 
-    width: 100%; max-width: 1100px; height: 85vh; 
-    background: #151515; 
-    border-radius: 16px; 
-    display: flex; flex-direction: column; 
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255,255,255,0.1); 
-    border: 1px solid var(--border); 
-    transform: translateY(30px) scale(0.96); 
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
-    overflow: hidden; 
-  }
+  .browser-window { width: 100%; max-width: 1100px; height: 85vh; background: #151515; border-radius: 16px; display: flex; flex-direction: column; box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255,255,255,0.1); border: 1px solid var(--border); transform: translateY(30px) scale(0.96); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; }
   .modal-overlay.open .browser-window { transform: translateY(0) scale(1); }
-
-  .browser-header { 
-    background: #1e1e1e; padding: 14px 20px; 
-    display: flex; align-items: center; gap: 15px; 
-    border-bottom: 1px solid #111; 
-  }
+  .browser-header { background: #1e1e1e; padding: 14px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #111; }
   .browser-dots { display: flex; gap: 8px; }
   .browser-dots span { width: 12px; height: 12px; border-radius: 50%; background: #555; }
-  
   .browser-dots span:nth-child(1) { background: #ff5f56; cursor: pointer; position: relative; transition: 0.2s; }
   .browser-dots span:nth-child(1):hover { background: #e0443e; }
-  .browser-dots span:nth-child(1)::after { 
-    content: '×'; color: #4a0000; font-size: 11px; font-weight: bold; 
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-    opacity: 0; transition: opacity 0.2s; 
-  }
+  .browser-dots span:nth-child(1)::after { content: '×'; color: #4a0000; font-size: 11px; font-weight: bold; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.2s; }
   .browser-dots span:nth-child(1):hover::after { opacity: 1; }
-
   .browser-dots span:nth-child(2) { background: #ffbd2e; }
   .browser-dots span:nth-child(3) { background: #27c93f; }
-
-  .browser-address { 
-    flex-grow: 1; 
-    background: #111; 
-    border-radius: 8px; 
-    padding: 8px 16px; 
-    color: #aaa; 
-    font-size: 13px; 
-    font-family: monospace; 
-    display: flex; align-items: center; gap: 10px; 
-  }
+  .browser-address { flex-grow: 1; background: #111; border-radius: 8px; padding: 8px 16px; color: #aaa; font-size: 13px; font-family: monospace; display: flex; align-items: center; gap: 10px; }
   .browser-address svg { width: 12px; height: 12px; fill: #666; }
-
-  .browser-actions { display: flex; gap: 10px; }
-  .browser-open-tab { 
-    background: var(--accent); color: #000; 
-    border: none; padding: 8px 16px; border-radius: 8px; 
-    font-size: 13px; font-weight: 700; 
-    cursor: pointer; transition: 0.3s; 
-    text-decoration: none; display: flex; align-items: center; 
-  }
-  .browser-open-tab:hover { background: var(--accent-hover); }
-
   .browser-body { flex-grow: 1; background: #000; position: relative; }
   .browser-iframe { width: 100%; height: 100%; border: none; display: block; background: #0d0d0d; }
 
-  @media (max-width: 900px) {
-    .nav { display: none; }
-  }
+  @media (max-width: 900px) { .nav { display: none; } }
   @media (max-width: 768px) {
     .header-inner { justify-content: center; gap: 10px; flex-wrap: wrap; height: auto; padding: 12px 0; }
     .header-actions { flex-wrap: wrap; justify-content: center; }
@@ -390,17 +241,12 @@
 <body>
 
 <script>
-  // Принудительный сброс скролла в начало при загрузке/обновлении
-  if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual';
-  }
+  if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
   window.scrollTo(0, 0);
 </script>
 
-<!-- ГЛОБАЛЬНЫЙ ФОН С БЕГУЩИМ КОДОМ -->
 <div class="global-code-bg" id="globalCodeBg"></div>
 
-<!-- ПРЕЛОАДЕР -->
 <div class="preloader-overlay" id="preloader">
   <div class="code-background" id="codeBackground"></div>
   <div class="logo-composition">
@@ -412,58 +258,26 @@
 </div>
 
 <script>
-  // ================= ГЕНЕРАЦИЯ БЕГУЩЕГО КОДА =================
   const codeLines = [
-    'const express = require("express");',
-    'app.use(express.json());',
-    'router.get("/api/users", async (req, res) => {',
-    '  const users = await db.query("SELECT * FROM users");',
-    '  res.json(users);',
-    '});',
-    'function initApp() {',
-    '  return new Promise((resolve) => setTimeout(resolve, 1000));',
-    '}',
-    'const PORT = process.env.PORT || 3000;',
-    'app.listen(PORT, () => console.log("Server running"));',
-    'export default class UserController {',
-    '  async getUser(id) { return this.model.findById(id); }',
-    '}',
-    '// TODO: optimize this function',
-    'function calculateTotal(items) {',
-    '  return items.reduce((sum, item) => sum + item.price, 0);',
-    '}',
-    'if (process.env.NODE_ENV === "production") {',
-    '  app.use(compression());',
-    '}',
-    'const config = { apiKey: "sk_live_...", timeout: 5000 };',
-    'await fetch("/api/data", { method: "POST" });',
-    'class User extends Model {',
-    '  static get tableName() { return "users"; }',
-    '}',
-    'const isValid = email.includes("@");',
-    'while (queue.length > 0) {',
-    '  const task = queue.shift();',
-    '  await task();',
-    '}',
-    '// FIXME: memory leak',
-    'window.addEventListener("resize", debounce(handler, 200));',
-    'const result = arr.filter(x => x !== null).map(x => x * 2);',
-    'Promise.all([fetchA(), fetchB()]).then(([a, b]) => console.log(a, b));',
-    'git commit -m "fix: resolve issue"',
-    'npm install --save-dev typescript',
-    'docker-compose up -d --build',
-    'SELECT * FROM orders WHERE status = "pending";',
-    'function debounce(fn, delay) {',
-    '  let timer;',
-    '  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };',
-    '}',
+    'const express = require("express");', 'app.use(express.json());',
+    'router.get("/api/users", async (req, res) => {', '  const users = await db.query("SELECT * FROM users");',
+    '  res.json(users);', '});', 'function initApp() {', '  return new Promise((resolve) => setTimeout(resolve, 1000));', '}',
+    'const PORT = process.env.PORT || 3000;', 'app.listen(PORT, () => console.log("Server running"));',
+    'export default class UserController {', '  async getUser(id) { return this.model.findById(id); }', '}',
+    '// TODO: optimize this function', 'function calculateTotal(items) {', '  return items.reduce((sum, item) => sum + item.price, 0);', '}',
+    'if (process.env.NODE_ENV === "production") {', '  app.use(compression());', '}',
+    'const config = { apiKey: "sk_live_...", timeout: 5000 };', 'await fetch("/api/data", { method: "POST" });',
+    'class User extends Model {', '  static get tableName() { return "users"; }', '}', 'const isValid = email.includes("@");',
+    'while (queue.length > 0) {', '  const task = queue.shift();', '  await task();', '}', '// FIXME: memory leak',
+    'window.addEventListener("resize", debounce(handler, 200));', 'const result = arr.filter(x => x !== null).map(x => x * 2);',
+    'Promise.all([fetchA(), fetchB()]).then(([a, b]) => console.log(a, b));', 'git commit -m "fix: resolve issue"',
+    'npm install --save-dev typescript', 'docker-compose up -d --build', 'SELECT * FROM orders WHERE status = "pending";',
+    'function debounce(fn, delay) {', '  let timer;', '  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };', '}',
   ];
 
   function generateCodeText(linesCount) {
     let text = '';
-    for (let i = 0; i < linesCount; i++) {
-      text += codeLines[Math.floor(Math.random() * codeLines.length)] + '\n';
-    }
+    for (let i = 0; i < linesCount; i++) { text += codeLines[Math.floor(Math.random() * codeLines.length)] + '\n'; }
     return text;
   }
 
@@ -480,20 +294,11 @@
     }
   }
 
-  // Глобальный фон
-  const globalCodeBg = document.getElementById('globalCodeBg');
-  createCodeColumns(globalCodeBg, 8, 12.5, 60);
+  createCodeColumns(document.getElementById('globalCodeBg'), 8, 12.5, 60);
+  createCodeColumns(document.getElementById('codeBackground'), 6, 16, 40);
 
-  // Фон прелоадера
-  const codeBackground = document.getElementById('codeBackground');
-  createCodeColumns(codeBackground, 6, 16, 40);
-
-  // ================= ПРЕЛОАДЕР =================
   (function() {
     const preloader = document.getElementById('preloader');
-    
-    preloader.classList.remove('hidden', 'show-logo', 'flash-green');
-    
     setTimeout(() => { preloader.classList.add('show-logo'); }, 300);
     setTimeout(() => { preloader.classList.add('flash-green'); }, 2500);
     setTimeout(() => { 
@@ -503,7 +308,6 @@
   })();
 </script>
 
-<!-- ШАПКА -->
 <header class="header" id="mainHeader">
   <div class="container header-inner">
     <a href="#" class="logo"><span>X</span>LMNR</a>
@@ -520,10 +324,10 @@
   </div>
 </header>
 
-<!-- ГЛАВНЫЙ ЭКРАН -->
 <section class="hero">
   <div class="container hero-content">
-    <h1 class="reveal">Сайты, <br>которые <span>приносят клиентов</span></h1>
+    <!-- ТУТ ДОБАВЛЕНА ВЕРСИЯ V1 -->
+    <h1 class="reveal">Сайты, <br>которые <span>приносят клиентов</span> <span style="font-size: 0.4em; color: #f59e0b; vertical-align: super; margin-left: 10px; font-weight: 800;">V1</span></h1>
     <p class="reveal">Современный дизайн, идеальная адаптация под телефоны и удобные админ-панели.</p>
     <div class="hero-actions reveal">
       <a href="#contact" class="btn">Заказать сайт</a>
@@ -532,7 +336,6 @@
   </div>
 </section>
 
-<!-- УСЛУГИ -->
 <section id="services">
   <div class="container">
     <h2 class="section-title reveal">Наши <span>услуги</span></h2>
@@ -557,14 +360,12 @@
   </div>
 </section>
 
-<!-- ПОРТФОЛИО -->
 <section id="portfolio">
   <div class="container">
     <h2 class="section-title reveal">Наши <span>работы</span></h2>
     <p class="section-subtitle reveal">Нажмите на карточку, чтобы открыть сайт прямо в окне браузера.</p>
     <div class="portfolio-grid">
       
-      <!-- Карточка 1: Автосервис -->
       <div class="portfolio-item reveal" id="openAutoazbuka">
         <div class="portfolio-img-wrapper">
           <div class="portfolio-placeholder">
@@ -578,7 +379,6 @@
         </div>
       </div>
 
-      <!-- Карточка 2: Заглушка -->
       <div class="portfolio-item reveal">
         <div class="portfolio-img-wrapper">
           <div class="portfolio-placeholder">
@@ -586,12 +386,9 @@
             <span>Скоро</span>
           </div>
         </div>
-        <div class="portfolio-info">
-          <p>Новый проект • В разработке</p>
-        </div>
+        <div class="portfolio-info"><p>Новый проект • В разработке</p></div>
       </div>
 
-      <!-- Карточка 3: Заглушка -->
       <div class="portfolio-item reveal">
         <div class="portfolio-img-wrapper">
           <div class="portfolio-placeholder">
@@ -599,16 +396,12 @@
             <span>Скоро</span>
           </div>
         </div>
-        <div class="portfolio-info">
-          <p>Новый проект • В разработке</p>
-        </div>
+        <div class="portfolio-info"><p>Новый проект • В разработке</p></div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- МИНИ-БРАУЗЕР -->
 <div class="modal-overlay" id="browserModal">
   <div class="browser-window">
     <div class="browser-header">
@@ -620,9 +413,6 @@
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
         autoservice
       </div>
-      <div class="browser-actions">
-        <a href="autoservice/avtoazbuka.html" target="_blank" class="browser-open-tab">Открыть в новой вкладке</a>
-      </div>
     </div>
     <div class="browser-body">
       <iframe class="browser-iframe" src="autoservice/avtoazbuka.html" title="АвтоАзбука" loading="lazy"></iframe>
@@ -630,7 +420,6 @@
   </div>
 </div>
 
-<!-- ПРЕИМУЩЕСТВА + ТЕРМИНАЛ -->
 <section id="benefits">
   <div class="container">
     <div class="features">
@@ -666,21 +455,19 @@
   </div>
 </section>
 
-<!-- КОНТАКТЫ -->
 <section id="contact" class="contact-section">
   <div class="container">
     <h2 class="section-title reveal">Давайте <span>работать</span></h2>
     <p class="section-subtitle reveal">Оставьте заявку, и мы свяжемся с вами для обсуждения деталей.</p>
     <form class="contact-form reveal" id="contactForm">
-      <div class="form-group"><label>Ваше имя</label><input type="text" placeholder="Иван" required></div>
-      <div class="form-group"><label>Телефон или Telegram</label><input type="text" placeholder="+7 (999) 000-00-00" required></div>
-      <div class="form-group"><label>Какой сайт вам нужен?</label><textarea placeholder="Расскажите пару слов о вашем проекте..." required></textarea></div>
-      <button type="submit" class="btn">Отправить заявку</button>
+      <div class="form-group"><label>Ваше имя</label><input type="text" id="clientName" placeholder="Иван" required></div>
+      <div class="form-group"><label>Телефон или Telegram</label><input type="text" id="clientPhone" placeholder="+7 (999) 000-00-00" required></div>
+      <div class="form-group"><label>Какой сайт вам нужен?</label><textarea id="clientMessage" placeholder="Расскажите пару слов о вашем проекте..." required></textarea></div>
+      <button type="submit" class="btn" id="submitBtn">Отправить заявку</button>
     </form>
   </div>
 </section>
 
-<!-- ПОДВАЛ -->
 <footer class="footer">
   <div class="container">
     <p>&copy; <span id="year"></span> XLMNR. Создание сайтов под ключ.</p>
@@ -688,10 +475,8 @@
 </footer>
 
 <script>
-  // ОСТАЛЬНЫЕ СКРИПТЫ
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // REVEAL
   const revealElements = document.querySelectorAll('.reveal');
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -700,59 +485,34 @@
   }, { threshold: 0.1 });
   revealElements.forEach(el => revealObserver.observe(el));
 
-  // МИНИ-БРАУЗЕР
   const modal = document.getElementById('browserModal');
   const openBtn = document.getElementById('openAutoazbuka');
   const dotClose = document.getElementById('dotClose');
 
-  openBtn.addEventListener('click', () => {
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  });
+  openBtn.addEventListener('click', () => { modal.classList.add('open'); document.body.style.overflow = 'hidden'; });
+  dotClose.addEventListener('click', () => { modal.classList.remove('open'); document.body.style.overflow = ''; });
+  modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.remove('open'); document.body.style.overflow = ''; } });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) { modal.classList.remove('open'); document.body.style.overflow = ''; } });
 
-  dotClose.addEventListener('click', () => {
-    modal.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-
-  modal.addEventListener('click', (e) => { 
-    if (e.target === modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
-  });
-
-  document.addEventListener('keydown', (e) => { 
-    if (e.key === 'Escape' && modal.classList.contains('open')) {
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-  });
-
-  // КНОПКА "ПОЛУЧИТЬ СКИДКУ" — скролл к терминалу и автозапуск
   const discountBtn = document.getElementById('discountBtn');
   const benefitsSection = document.getElementById('benefits');
   
   discountBtn.addEventListener('click', () => {
     benefitsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(() => {
-      if (!isTerminalRunning) {
-        btnRun.click();
-      }
-    }, 800);
+    setTimeout(() => { if (!isTerminalRunning) { btnRun.click(); } }, 800);
   });
 
-  // ТЕРМИНАЛ
   const btnRun = document.getElementById('btnRunCode');
   const codePreview = document.getElementById('codePreview');
   const terminalWrapper = document.getElementById('terminalWrapper');
   const terminalBody = document.getElementById('terminalBody');
   let isTerminalRunning = false;
-
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   async function typeText(text, speed = 30, className = '') {
     const span = document.createElement('span');
     if (className) span.className = className;
     terminalBody.appendChild(span);
-    
     for (let i = 0; i < text.length; i++) {
       span.textContent += text[i];
       terminalBody.scrollTop = terminalBody.scrollHeight;
@@ -766,12 +526,9 @@
     const spamLine = document.createElement('div');
     spamLine.className = 't-dim';
     terminalBody.appendChild(spamLine);
-    
     for (let i = 0; i < 40; i++) {
       let str = '';
-      for (let j = 0; j < 30; j++) {
-        str += chars[Math.floor(Math.random() * chars.length)];
-      }
+      for (let j = 0; j < 30; j++) { str += chars[Math.floor(Math.random() * chars.length)]; }
       spamLine.textContent = str;
       terminalBody.scrollTop = terminalBody.scrollHeight;
       await sleep(20);
@@ -782,32 +539,25 @@
   function crumbleEffect(element) {
     element.style.transition = 'none';
     element.style.opacity = '1';
-    
     const rect = element.getBoundingClientRect();
     const particlesCount = 60;
-    
     for (let i = 0; i < particlesCount; i++) {
       const p = document.createElement('div');
       p.style.position = 'absolute';
-      p.style.width = '3px';
-      p.style.height = '3px';
-      p.style.background = '#10b981';
+      p.style.width = '3px'; p.style.height = '3px'; p.style.background = '#10b981';
       p.style.left = Math.random() * rect.width + 'px';
       p.style.top = Math.random() * rect.height + 'px';
       p.style.opacity = '1';
       p.style.transition = `transform ${0.8 + Math.random()}s ease-out, opacity ${0.8 + Math.random()}s ease-out`;
       p.style.pointerEvents = 'none';
       element.appendChild(p);
-      
       requestAnimationFrame(() => {
         p.style.transform = `translate(${(Math.random() - 0.5) * 150}px, ${100 + Math.random() * 100}px) rotate(${Math.random() * 360}deg)`;
         p.style.opacity = '0';
       });
     }
-    
     element.style.opacity = '0';
     element.style.transform = 'scale(0.95)';
-    
     setTimeout(() => {
       element.innerHTML = '';
       element.style.opacity = '1';
@@ -823,14 +573,12 @@
     btnRun.style.opacity = '0.5';
 
     crumbleEffect(codePreview);
-    
     await sleep(300);
     codePreview.style.position = 'absolute';
     codePreview.style.opacity = '0';
     
     terminalWrapper.classList.add('active');
     terminalBody.innerHTML = '';
-    
     await sleep(500);
 
     await typeText('user@xlmr:~$ ', 50, 't-accent');
@@ -841,41 +589,20 @@
     await typeText('создать крутой сайт\n', 60, 't-white');
     await sleep(300);
 
-    const files = [
-      'C:\\XLMNR\\index.html',
-      'C:\\XLMNR\\styles.css',
-      'C:\\XLMNR\\script.js',
-      'C:\\XLMNR\\images\\logo.png',
-      'C:\\XLMNR\\projects\\autoazbuka.html',
-      'C:\\XLMNR\\projects\\landing_page.html'
-    ];
+    const files = ['C:\\XLMNR\\index.html', 'C:\\XLMNR\\styles.css', 'C:\\XLMNR\\script.js', 'C:\\XLMNR\\images\\logo.png', 'C:\\XLMNR\\projects\\autoazbuka.html', 'C:\\XLMNR\\projects\\landing_page.html'];
     for (const file of files) {
       await typeText(file + '\n', 30, 't-dim');
       await sleep(80);
     }
     await typeText('\n', 10);
 
-    const htmlCode = [
-      '<!DOCTYPE html>',
-      '<html lang="ru">',
-      '<head>',
-      '  <meta charset="UTF-8">',
-      '  <title>Идеальный сайт</title>',
-      '</head>',
-      '<body>',
-      '  <h1>Приносит клиентов</h1>',
-      '  <button>Оставить заявку</button>',
-      '</body>',
-      '</html>'
-    ];
-    
+    const htmlCode = ['<!DOCTYPE html>', '<html lang="ru">', '<head>', '  <meta charset="UTF-8">', '  <title>Идеальный сайт</title>', '</head>', '<body>', '  <h1>Приносит клиентов</h1>', '  <button>Оставить заявку</button>', '</body>', '</html>'];
     for (const line of htmlCode) {
       await typeText(line + '\n', 20, 't-accent');
       await sleep(50);
     }
     
     await sleep(300);
-
     await typeText('> Компиляция проекта...\n', 30, 't-white');
     await sleep(200);
     await spamCompilation();
@@ -902,18 +629,47 @@
     isTerminalRunning = false;
   });
 
-  // ФОРМА (заглушка)
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
+  // ==========================================
+  // РАБОЧАЯ ФОРМА (ОТПРАВКА В TELEGRAM)
+  // ==========================================
+  document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const btn = this.querySelector('button');
+    const btn = document.getElementById('submitBtn');
     const originalText = btn.textContent;
+    
     btn.textContent = 'Отправляется...';
-    btn.style.background = '#059669'; 
-    setTimeout(() => {
-      btn.textContent = 'Заявка отправлена!';
-      this.reset();
-      setTimeout(() => { btn.textContent = originalText; btn.style.background = ''; }, 3000);
-    }, 1000);
+    btn.style.background = '#059669';
+    btn.disabled = true;
+
+    const name = document.getElementById('clientName').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const message = document.getElementById('clientMessage').value.trim();
+
+    try {
+      const response = await fetch('https://tg-proxy.xlmnr.workers.dev/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, message })
+      });
+      const result = await response.json();
+
+      if (result.ok) {
+        btn.textContent = 'Заявка отправлена!';
+        this.reset();
+      } else {
+        throw new Error('Ошибка сервера');
+      }
+    } catch (error) {
+      btn.textContent = 'Ошибка. Попробуйте позже.';
+      btn.style.background = '#ef4444';
+      console.error(error);
+    } finally {
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 3000);
+    }
   });
 </script>
 </body>
