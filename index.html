@@ -49,11 +49,29 @@
       white-space: pre;
       display: flex;
       justify-content: space-around;
-      opacity: 0.6;
-      /* Плавное затухание сверху и снизу для эффекта "шлейфа" */
-      mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+      
+      /* Анимация появления при загрузке */
+      opacity: 0;
+      transform: translateY(-40px);
+      animation: fadeInCodeBg 2s ease-out 0.2s forwards;
+      
+      /* Усиленное затухание сверху и снизу (30% и 70%) */
+      mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
     }
+
+    /* Ключевые кадры для плавного появления сверху вниз */
+    @keyframes fadeInCodeBg {
+      0% { 
+        opacity: 0; 
+        transform: translateY(-40px); 
+      }
+      100% { 
+        opacity: 0.35; /* Итоговая прозрачность: фон стал менее заметным */
+        transform: translateY(0); 
+      }
+    }
+
     .code-column {
       position: relative;
       width: 100%;
@@ -563,7 +581,7 @@
       bg.innerHTML = '';
       const chars = ['<', '>', '/', '=', '{', '}', '(', ')', '[', ']', '0', '1', 'a', 'b', 'c', 'x', 'y', 'z', 'const', 'let', 'if', 'for', 'npm', 'git', 'css', 'js'];
       
-      const colCount = Math.max(10, Math.floor(window.innerWidth / 45)); // Плотнее
+      const colCount = Math.max(10, Math.floor(window.innerWidth / 45));
       
       for(let i=0; i<colCount; i++) {
         const col = document.createElement('div');
@@ -575,14 +593,14 @@
           const span = document.createElement('span');
           span.textContent = char;
           
-          // Делаем некоторые символы яркими и светящимися
+          // Яркие символы (сделали чуть тусклее)
           if (Math.random() > 0.9) {
-            span.style.color = '#f5f2eb';
-            span.style.textShadow = '0 0 10px rgba(245,242,235,0.9)';
+            span.style.color = 'rgba(245,242,235,0.6)';
+            span.style.textShadow = '0 0 8px rgba(245,242,235,0.4)';
           } 
-          // Некоторые тусклыми
+          // Очень тусклые
           else if (Math.random() > 0.7) {
-            span.style.opacity = '0.2';
+            span.style.opacity = '0.1';
           }
           
           fragment.appendChild(span);
@@ -590,7 +608,6 @@
         }
         col.appendChild(fragment);
         
-        // Разная скорость и задержка
         const duration = 12 + Math.random() * 18;
         col.style.animationDuration = duration + 's';
         col.style.animationDelay = -(Math.random() * duration) + 's';
