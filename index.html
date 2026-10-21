@@ -11,7 +11,7 @@
     /* ================= БАЗА ================= */
     :root {
       --bg: #121212;
-      --surface: #1a1a1a;
+      --surface: rgba(26, 26, 26, 0.4); /* Полупрозрачные карточки */
       --surface-2: #242424;
       --text: #f5f2eb;
       --text-muted: #a3a3a3;
@@ -24,10 +24,10 @@
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; }
     
-    /* Плавный градиент на фоне всего сайта (без резких переходов) */
+    /* ЕДИНЫЙ ГРАДИЕНТ НА ВЕСЬ САЙТ */
     body { 
       font-family: var(--font-body); 
-      background: linear-gradient(180deg, #181818 0%, #0d0d0d 50%, #151515 100%);
+      background: linear-gradient(180deg, #181818 0%, #0a0a0a 100%);
       background-attachment: fixed;
       color: var(--text); 
       line-height: 1.6; 
@@ -40,34 +40,14 @@
     h2 span { font-style: italic; color: var(--accent); }
     .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 3; }
     
-    /* Убрали резкие рамки между секциями */
-    section { padding: 100px 0; }
+    /* Убрали все фоны и рамки у секций */
+    section { padding: 100px 0; position: relative; }
     .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 60px; font-size: 18px; }
 
-    /* ================= КРАСИВЫЙ ФОН С КОДОМ ================= */
+    /* ================= БЕСШОВНЫЙ ФОН С КОДОМ ================= */
     .code-bg-section {
       position: relative;
       overflow: hidden;
-    }
-
-    /* Мягкие черные плашки сверху и снизу для секций с кодом */
-    .code-bg-section::before,
-    .code-bg-section::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      width: 100%;
-      height: 200px;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .code-bg-section::before {
-      top: 0;
-      background: linear-gradient(to bottom, #121212 0%, transparent 100%);
-    }
-    .code-bg-section::after {
-      bottom: 0;
-      background: linear-gradient(to top, #0d0d0d 0%, transparent 100%);
     }
 
     .css-code-bg {
@@ -78,26 +58,25 @@
       z-index: 1;
       font-family: 'Courier New', monospace;
       font-size: 13px;
-      line-height: 1.6;
+      line-height: 1.5;
       white-space: pre;
       display: flex;
       justify-content: space-around;
       
-      opacity: 0;
-      transform: translateY(-40px);
-      animation: fadeInCodeBg 2s ease-out 0.2s forwards;
-      
+      /* Плавно растворяем код сверху и снизу */
       mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
       -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+      
+      opacity: 0;
+      animation: fadeInBg 2s ease-out 0.2s forwards;
     }
 
-    @keyframes fadeInCodeBg {
-      0% { opacity: 0; transform: translateY(-40px); }
-      100% { opacity: 0.3; transform: translateY(0); }
+    @keyframes fadeInBg {
+      to { opacity: 0.25; }
     }
 
-    /* Абсолютно бесшовная анимация */
     .code-column {
+      position: relative;
       display: flex;
       flex-direction: column;
       animation: scrollCode linear infinite;
@@ -107,10 +86,10 @@
 
     .code-content {
       flex-shrink: 0;
-      /* Небольшой отступ, чтобы текст не слипался на стыке */
-      padding-bottom: 20px; 
+      /* Убрали padding, чтобы не было швов */
     }
 
+    /* Анимация ровно на 50% (половина ленты) */
     @keyframes scrollCode {
       from { transform: translateY(0); }
       to { transform: translateY(-50%); }
@@ -218,7 +197,7 @@
     /* ================= МОДАЛКА БРАУЗЕРА ================= */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s; }
     .modal-overlay.open { opacity: 1; pointer-events: auto; }
-    .browser-window { width: 100%; max-width: 1100px; height: 85vh; background: var(--surface); border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 25px 80px rgba(0,0,0,0.9); border: 1px solid var(--border); transform: translateY(30px) scale(0.96); transition: 0.5s; overflow: hidden; }
+    .browser-window { width: 100%; max-width: 1100px; height: 85vh; background: var(--bg); border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 25px 80px rgba(0,0,0,0.9); border: 1px solid var(--border); transform: translateY(30px) scale(0.96); transition: 0.5s; overflow: hidden; }
     .modal-overlay.open .browser-window { transform: translateY(0) scale(1); }
     .browser-header { background: #1e1e1e; padding: 14px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #111; }
     .browser-dots { display: flex; gap: 8px; }
@@ -248,7 +227,7 @@
     /* ================= ИИ-ЧАТ ================= */
     .ai-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s; }
     .ai-modal.open { opacity: 1; pointer-events: auto; }
-    .ai-window { background: var(--surface); width: 100%; max-width: 500px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 600px; max-height: 90vh; overflow: hidden; }
+    .ai-window { background: var(--bg); width: 100%; max-width: 500px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 600px; max-height: 90vh; overflow: hidden; }
     .ai-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
     .ai-header h3 { font-size: 18px; color: var(--accent); }
     .ai-close { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
@@ -257,7 +236,7 @@
     .msg.bot { background: var(--surface-2); align-self: flex-start; }
     .msg.user { background: var(--accent); color: #fff; align-self: flex-end; }
     .ai-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
-    .ai-input-area input { flex-grow: 1; background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 10px 15px; border-radius: 4px; outline: none; }
+    .ai-input-area input { flex-grow: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border); color: #fff; padding: 10px 15px; border-radius: 4px; outline: none; }
 
     /* ================= ПОДВАЛ ================= */
     .footer { padding: 60px 0 20px; background: #0a0a0a; color: var(--text-muted); font-size: 14px; }
@@ -600,7 +579,7 @@
     });
   });
 
-  // ================= БЕСШОВНАЯ ГЕНЕРАЦИЯ ФОНА =================
+  // ================= ИДЕАЛЬНО БЕСШОВНАЯ ГЕНЕРАЦИЯ ФОНА =================
   function initCSSBackground() {
     document.querySelectorAll('.css-code-bg').forEach(bg => {
       bg.innerHTML = '';
@@ -616,7 +595,7 @@
         content.className = 'code-content';
         
         const fragment = document.createDocumentFragment();
-        // Генерируем 200 строк для надежного перекрытия экрана
+        // Генерируем очень много строк (200), чтобы точно перекрыть экран
         for(let j=0; j<200; j++) {
           const char = chars[Math.floor(Math.random()*chars.length)];
           const span = document.createElement('span');
@@ -635,11 +614,11 @@
         }
         content.appendChild(fragment);
         
-        // Дублируем контент для бесшовности
+        // Дублируем контент для абсолютной бесшовности
         col.appendChild(content);
         col.appendChild(content.cloneNode(true));
         
-        const duration = 20 + Math.random() * 20; // Немного замедлили для благородства
+        const duration = 20 + Math.random() * 20; // Медленное, благородное падение
         col.style.animationDuration = duration + 's';
         col.style.animationDelay = -(Math.random() * duration) + 's';
         
