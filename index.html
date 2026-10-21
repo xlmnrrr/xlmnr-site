@@ -28,7 +28,7 @@
     h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 20px; }
     h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 15px; text-align: center; }
     h2 span { font-style: italic; color: var(--accent); }
-    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; }
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 3; } /* Подняли z-index */
     section { padding: 100px 0; border-bottom: 1px solid var(--border); }
     .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 60px; font-size: 18px; }
 
@@ -37,12 +37,33 @@
       position: relative;
       overflow: hidden;
     }
+
+    /* Эффект "Черной плашки" (затемнения) сверху и снизу */
+    .code-bg-section::before,
+    .code-bg-section::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 150px;
+      z-index: 2; /* Выше кода, но ниже контента */
+      pointer-events: none;
+    }
+    .code-bg-section::before {
+      top: 0;
+      background: linear-gradient(to bottom, var(--bg) 10%, transparent 100%);
+    }
+    .code-bg-section::after {
+      bottom: 0;
+      background: linear-gradient(to top, var(--bg) 10%, transparent 100%);
+    }
+
     .css-code-bg {
       position: absolute;
       inset: 0;
       overflow: hidden;
       pointer-events: none;
-      z-index: 1;
+      z-index: 1; /* Самый нижний слой */
       font-family: 'Courier New', monospace;
       font-size: 13px;
       line-height: 1.5;
@@ -55,21 +76,15 @@
       transform: translateY(-40px);
       animation: fadeInCodeBg 2s ease-out 0.2s forwards;
       
-      /* Усиленное затухание сверху и снизу (30% и 70%) */
-      mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
+      /* Легкое затухание краев для мягкости */
+      mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
     }
 
     /* Ключевые кадры для плавного появления сверху вниз */
     @keyframes fadeInCodeBg {
-      0% { 
-        opacity: 0; 
-        transform: translateY(-40px); 
-      }
-      100% { 
-        opacity: 0.35; /* Итоговая прозрачность: фон стал менее заметным */
-        transform: translateY(0); 
-      }
+      0% { opacity: 0; transform: translateY(-40px); }
+      100% { opacity: 0.35; transform: translateY(0); }
     }
 
     .code-column {
@@ -85,10 +100,6 @@
     @keyframes scrollCode {
       from { transform: translateY(0); }
       to { transform: translateY(50%); }
-    }
-    .code-bg-section .container {
-      position: relative;
-      z-index: 2;
     }
 
     /* ================= ШАПКА ================= */
@@ -575,7 +586,7 @@
     });
   });
 
-  // ================= УЛУЧШЕННАЯ ГЕНЕРАЦИЯ CSS ФОНА =================
+  // ================= ГЕНЕРАЦИЯ CSS ФОНА =================
   function initCSSBackground() {
     document.querySelectorAll('.css-code-bg').forEach(bg => {
       bg.innerHTML = '';
@@ -593,12 +604,10 @@
           const span = document.createElement('span');
           span.textContent = char;
           
-          // Яркие символы (сделали чуть тусклее)
           if (Math.random() > 0.9) {
             span.style.color = 'rgba(245,242,235,0.6)';
             span.style.textShadow = '0 0 8px rgba(245,242,235,0.4)';
           } 
-          // Очень тусклые
           else if (Math.random() > 0.7) {
             span.style.opacity = '0.1';
           }
