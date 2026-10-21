@@ -23,13 +23,25 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; }
-    body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+    
+    /* Плавный градиент на фоне всего сайта (без резких переходов) */
+    body { 
+      font-family: var(--font-body); 
+      background: linear-gradient(180deg, #181818 0%, #0d0d0d 50%, #151515 100%);
+      background-attachment: fixed;
+      color: var(--text); 
+      line-height: 1.6; 
+      overflow-x: hidden; 
+    }
+    
     h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; }
     h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 20px; }
     h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 15px; text-align: center; }
     h2 span { font-style: italic; color: var(--accent); }
     .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 3; }
-    section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+    
+    /* Убрали резкие рамки между секциями */
+    section { padding: 100px 0; }
     .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 60px; font-size: 18px; }
 
     /* ================= КРАСИВЫЙ ФОН С КОДОМ ================= */
@@ -38,24 +50,24 @@
       overflow: hidden;
     }
 
-    /* Черные плашки (градиенты) сверху и снизу */
+    /* Мягкие черные плашки сверху и снизу для секций с кодом */
     .code-bg-section::before,
     .code-bg-section::after {
       content: '';
       position: absolute;
       left: 0;
       width: 100%;
-      height: 250px; /* Увеличили высоту для более плавного растворения */
+      height: 200px;
       z-index: 2;
       pointer-events: none;
     }
     .code-bg-section::before {
       top: 0;
-      background: linear-gradient(to bottom, var(--bg) 15%, transparent 100%);
+      background: linear-gradient(to bottom, #121212 0%, transparent 100%);
     }
     .code-bg-section::after {
       bottom: 0;
-      background: linear-gradient(to top, var(--bg) 15%, transparent 100%);
+      background: linear-gradient(to top, #0d0d0d 0%, transparent 100%);
     }
 
     .css-code-bg {
@@ -66,7 +78,7 @@
       z-index: 1;
       font-family: 'Courier New', monospace;
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.6;
       white-space: pre;
       display: flex;
       justify-content: space-around;
@@ -75,18 +87,17 @@
       transform: translateY(-40px);
       animation: fadeInCodeBg 2s ease-out 0.2s forwards;
       
-      mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
     }
 
     @keyframes fadeInCodeBg {
       0% { opacity: 0; transform: translateY(-40px); }
-      100% { opacity: 0.35; transform: translateY(0); }
+      100% { opacity: 0.3; transform: translateY(0); }
     }
 
-    /* Колонки теперь используют бесшовную анимацию */
+    /* Абсолютно бесшовная анимация */
     .code-column {
-      position: relative;
       display: flex;
       flex-direction: column;
       animation: scrollCode linear infinite;
@@ -96,16 +107,17 @@
 
     .code-content {
       flex-shrink: 0;
-      padding-bottom: 20px; /* Небольшой отступ между дублями текста */
+      /* Небольшой отступ, чтобы текст не слипался на стыке */
+      padding-bottom: 20px; 
     }
 
     @keyframes scrollCode {
-      from { transform: translateY(-50%); }
-      to { transform: translateY(0); }
+      from { transform: translateY(0); }
+      to { transform: translateY(-50%); }
     }
 
     /* ================= ШАПКА ================= */
-    .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18,18,18,0.95); border-bottom: 1px solid var(--border); transform: translateY(-100%); transition: transform 0.4s ease-out; }
+    .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18,18,18,0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); transform: translateY(-100%); transition: transform 0.4s ease-out; }
     .header.show { transform: translateY(0); }
     .header-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; gap: 20px; }
     .logo { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 0.05em; transition: color 0.3s; }
@@ -128,8 +140,8 @@
 
     /* ================= УСЛУГИ (BENTO) ================= */
     .bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
-    .bento-item { background: var(--surface); padding: 40px; border-radius: 8px; border: 1px solid var(--border); grid-column: span 12; transition: 0.3s; }
-    .bento-item:hover { border-color: rgba(194, 106, 74, 0.4); transform: translateY(-4px); }
+    .bento-item { background: rgba(26, 26, 26, 0.6); backdrop-filter: blur(10px); padding: 40px; border-radius: 8px; border: 1px solid var(--border); grid-column: span 12; transition: 0.3s; }
+    .bento-item:hover { border-color: rgba(194, 106, 74, 0.4); transform: translateY(-4px); background: rgba(26, 26, 26, 0.9); }
     .bento-item h3 { font-size: 22px; margin-bottom: 10px; color: var(--accent); }
     .bento-item p { color: var(--text-muted); font-size: 15px; }
     @media (min-width: 768px) {
@@ -140,7 +152,7 @@
 
     /* ================= ПОРТФОЛИО ================= */
     .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-    .portfolio-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: 0.3s; }
+    .portfolio-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: rgba(26, 26, 26, 0.6); backdrop-filter: blur(10px); cursor: pointer; transition: 0.3s; }
     .portfolio-item:hover { border-color: var(--accent); transform: translateY(-5px); }
     .portfolio-img { width: 100%; aspect-ratio: 16/10; background: #222; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
     .portfolio-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
@@ -155,7 +167,7 @@
     
     .feature-list { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
     .feature-item { 
-      display: flex; gap: 15px; align-items: flex-start; background: var(--surface); 
+      display: flex; gap: 15px; align-items: flex-start; background: rgba(26, 26, 26, 0.6); backdrop-filter: blur(10px);
       padding: 20px; border-radius: 8px; border: 1px solid var(--border); transition: 0.3s; 
     }
     .feature-item:hover { border-color: rgba(194, 106, 74, 0.4); transform: translateX(5px); }
@@ -182,18 +194,18 @@
 
     /* ================= ОТЗЫВЫ ================= */
     .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px; }
-    .review-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 30px; position: relative; }
+    .review-card { background: rgba(26, 26, 26, 0.6); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 8px; padding: 30px; position: relative; }
     .review-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
     .review-avatar { width: 45px; height: 45px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 18px; }
     .review-author { font-weight: 700; font-size: 16px; color: #fff; }
     .review-date { font-size: 12px; color: var(--text-muted); }
     .review-text { color: #ddd; font-size: 15px; line-height: 1.5; }
     
-    .add-review-form { max-width: 600px; margin: 0 auto; background: var(--surface); padding: 30px; border-radius: 8px; border: 1px solid var(--border); }
+    .add-review-form { max-width: 600px; margin: 0 auto; background: rgba(26, 26, 26, 0.6); backdrop-filter: blur(10px); padding: 30px; border-radius: 8px; border: 1px solid var(--border); }
     
     /* ================= ФОРМЫ ================= */
     .form-group { margin-bottom: 15px; }
-    .form-group input, .form-group textarea { width: 100%; padding: 15px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 16px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 15px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 16px; }
     .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
     .contact-form { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
     
@@ -248,7 +260,7 @@
     .ai-input-area input { flex-grow: 1; background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 10px 15px; border-radius: 4px; outline: none; }
 
     /* ================= ПОДВАЛ ================= */
-    .footer { padding: 60px 0 20px; background: #0d0d0d; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; }
+    .footer { padding: 60px 0 20px; background: #0a0a0a; color: var(--text-muted); font-size: 14px; }
     .footer-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-bottom: 40px; }
     @media (min-width: 768px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
     .footer-col h4 { color: #fff; font-size: 16px; margin-bottom: 15px; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -322,7 +334,7 @@
   </div>
 </section>
 
-<section id="services" style="background: #0d0d0d;">
+<section id="services">
   <div class="container">
     <h2 class="reveal">Наши <span>услуги</span></h2>
     <p class="section-subtitle reveal">Всё, что нужно для запуска и роста вашего бизнеса в интернете.</p>
@@ -380,7 +392,7 @@
   </div>
 </section>
 
-<section id="benefits" style="background: #0d0d0d;">
+<section id="benefits">
   <div class="container features-layout">
     <div class="reveal">
       <h2 style="text-align: left;">Почему <span>XLMNR</span>?</h2>
@@ -443,7 +455,7 @@
   </div>
 </section>
 
-<section id="contact" style="background: #0d0d0d;">
+<section id="contact">
   <div class="container">
     <h2 class="reveal">Давайте <span>работать</span></h2>
     <p class="section-subtitle reveal">Оставьте заявку, и я свяжусь с вами в течение рабочего дня.</p>
@@ -604,8 +616,8 @@
         content.className = 'code-content';
         
         const fragment = document.createDocumentFragment();
-        // Генерируем 100 строк, чтобы точно перекрыть экран
-        for(let j=0; j<100; j++) {
+        // Генерируем 200 строк для надежного перекрытия экрана
+        for(let j=0; j<200; j++) {
           const char = chars[Math.floor(Math.random()*chars.length)];
           const span = document.createElement('span');
           span.textContent = char;
@@ -623,11 +635,11 @@
         }
         content.appendChild(fragment);
         
-        // Дублируем контент для бесшовной анимации
+        // Дублируем контент для бесшовности
         col.appendChild(content);
         col.appendChild(content.cloneNode(true));
         
-        const duration = 15 + Math.random() * 15;
+        const duration = 20 + Math.random() * 20; // Немного замедлили для благородства
         col.style.animationDuration = duration + 's';
         col.style.animationDelay = -(Math.random() * duration) + 's';
         
