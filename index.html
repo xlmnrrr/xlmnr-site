@@ -479,14 +479,14 @@
           text: document.getElementById('reviewText').value.trim()
         })
       });
-      status.textContent = 'Спасибо! Отзыв отправлен на модерацию.';
+      status.textContent = 'Спасибо! Отзыв отправлен.';
       status.style.color = '#10b981';
       this.reset();
     } catch (e) {
       status.textContent = 'Ошибка отправки.';
       status.style.color = '#ef4444';
     } finally {
-      btn.textContent = 'Отправить на модерацию'; btn.disabled = false;
+      btn.textContent = 'Отправить'; btn.disabled = false;
     }
   });
 
