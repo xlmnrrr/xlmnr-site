@@ -32,7 +32,7 @@
     section { padding: 100px 0; border-bottom: 1px solid var(--border); }
     .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 60px; font-size: 18px; }
 
-    /* ================= ФОН С КОДОМ (CSS-АНИМАЦИЯ) ================= */
+    /* ================= КРАСИВЫЙ ФОН С КОДОМ (CSS) ================= */
     .code-bg-section {
       position: relative;
       overflow: hidden;
@@ -43,14 +43,16 @@
       overflow: hidden;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.2;
       font-family: 'Courier New', monospace;
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--accent);
+      font-size: 13px;
+      line-height: 1.5;
       white-space: pre;
       display: flex;
       justify-content: space-around;
+      opacity: 0.6;
+      /* Плавное затухание сверху и снизу для эффекта "шлейфа" */
+      mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
     }
     .code-column {
       position: relative;
@@ -60,6 +62,7 @@
       animation: scrollCode linear infinite;
       text-align: center;
       will-change: transform;
+      color: var(--accent);
     }
     @keyframes scrollCode {
       from { transform: translateY(0); }
@@ -554,26 +557,41 @@
     });
   });
 
-  // ================= ГЕНЕРАЦИЯ CSS ФОНА =================
+  // ================= УЛУЧШЕННАЯ ГЕНЕРАЦИЯ CSS ФОНА =================
   function initCSSBackground() {
     document.querySelectorAll('.css-code-bg').forEach(bg => {
       bg.innerHTML = '';
       const chars = ['<', '>', '/', '=', '{', '}', '(', ')', '[', ']', '0', '1', 'a', 'b', 'c', 'x', 'y', 'z', 'const', 'let', 'if', 'for', 'npm', 'git', 'css', 'js'];
       
-      // Количество колонок зависит от ширины экрана
-      const colCount = Math.max(8, Math.floor(window.innerWidth / 60));
+      const colCount = Math.max(10, Math.floor(window.innerWidth / 45)); // Плотнее
       
       for(let i=0; i<colCount; i++) {
         const col = document.createElement('div');
         col.className = 'code-column';
         
-        let text = '';
-        for(let j=0; j<50; j++) {
-          text += chars[Math.floor(Math.random()*chars.length)] + '\n';
+        const fragment = document.createDocumentFragment();
+        for(let j=0; j<60; j++) {
+          const char = chars[Math.floor(Math.random()*chars.length)];
+          const span = document.createElement('span');
+          span.textContent = char;
+          
+          // Делаем некоторые символы яркими и светящимися
+          if (Math.random() > 0.9) {
+            span.style.color = '#f5f2eb';
+            span.style.textShadow = '0 0 10px rgba(245,242,235,0.9)';
+          } 
+          // Некоторые тусклыми
+          else if (Math.random() > 0.7) {
+            span.style.opacity = '0.2';
+          }
+          
+          fragment.appendChild(span);
+          fragment.appendChild(document.createTextNode('\n'));
         }
-        col.textContent = text;
+        col.appendChild(fragment);
         
-        const duration = 10 + Math.random() * 15;
+        // Разная скорость и задержка
+        const duration = 12 + Math.random() * 18;
         col.style.animationDuration = duration + 's';
         col.style.animationDelay = -(Math.random() * duration) + 's';
         
@@ -584,7 +602,6 @@
 
   initCSSBackground();
 
-  // Пересоздаем фон при изменении размера окна (с задержкой)
   let resizeTimeout;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
