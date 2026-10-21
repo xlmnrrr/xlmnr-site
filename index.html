@@ -43,18 +43,19 @@
       width: 100%; height: 100%;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.25; /* Прозрачность, чтобы не мешало читать */
+      opacity: 0.25;
     }
     .code-bg-section .container {
       position: relative;
-      z-index: 2; /* Контент выше фона */
+      z-index: 2;
     }
 
     /* ================= ШАПКА ================= */
-    .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18,18,18,0.95); border-bottom: 1px solid var(--border); transform: translateY(-100%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18,18,18,0.95); border-bottom: 1px solid var(--border); transform: translateY(-100%); transition: transform 0.4s ease-out; }
     .header.show { transform: translateY(0); }
     .header-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; gap: 20px; }
-    .logo { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 0.05em; }
+    .logo { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 0.05em; transition: color 0.3s; }
+    .logo:hover { color: var(--accent); }
     .logo span { color: var(--accent); }
     .nav { display: flex; gap: 30px; }
     .nav a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: color 0.3s; }
@@ -235,9 +236,22 @@
 </head>
 <body>
 
+<script>
+  // Отключаем автоматическое восстановление позиции скролла браузером
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  // Принудительно скроллим вверх при загрузке
+  window.scrollTo(0, 0);
+  // Очищаем хэш из URL, если он там затесался
+  if (window.location.hash) {
+    history.replaceState(null, null, window.location.pathname + window.location.search);
+  }
+</script>
+
 <header class="header" id="mainHeader">
   <div class="container header-inner">
-    <a href="#" class="logo"><span>X</span>LMNR</a>
+    <a href="#" class="logo" id="logoLink"><span>X</span>LMNR</a>
     <nav class="nav">
       <a href="#services">Услуги</a>
       <a href="#portfolio">Работы</a>
@@ -249,7 +263,6 @@
   </div>
 </header>
 
-<!-- Главный экран с кодом на фоне -->
 <section class="hero code-bg-section" id="home">
   <canvas class="code-canvas"></canvas>
   <div class="container reveal">
@@ -291,7 +304,6 @@
   </div>
 </section>
 
-<!-- Портфолио с кодом на фоне -->
 <section id="portfolio" class="code-bg-section">
   <canvas class="code-canvas"></canvas>
   <div class="container">
@@ -364,7 +376,6 @@
   </div>
 </section>
 
-<!-- Отзывы с кодом на фоне -->
 <section id="reviews" class="code-bg-section">
   <canvas class="code-canvas"></canvas>
   <div class="container">
@@ -501,22 +512,26 @@
 </div>
 
 <script>
-  window.scrollTo(0, 0);
-
-  setTimeout(() => document.getElementById('mainHeader').classList.add('show'), 500);
+  // Ускорили появление шапки
+  setTimeout(() => document.getElementById('mainHeader').classList.add('show'), 150);
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); } });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Плавный скролл без изменения URL
+  // Обработка кликов по ссылкам
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-      e.preventDefault();
       const targetId = this.getAttribute('href');
-      if (targetId === '#') return;
       
+      if (targetId === '#' || targetId === '#home') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      
+      e.preventDefault();
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
         const headerOffset = 60;
@@ -528,19 +543,18 @@
     });
   });
 
-  // ================= АНИМАЦИЯ ФОНА С КОДОМ =================
+  // ================= ОПТИМИЗИРОВАННАЯ АНИМАЦИЯ ФОНА =================
   function initCodeBackground() {
     const sections = document.querySelectorAll('.code-bg-section');
-    
+    const chars = ['<', '>', '/', '=', '{', '}', '(', ')', '[', ']', '0', '1', 'a', 'b', 'c', 'x', 'y', 'z', 'const', 'let', 'if', 'for', 'npm', 'git', 'css', 'js'];
+    const fontSize = 14;
+
     sections.forEach(section => {
       const canvas = section.querySelector('.code-canvas');
       if (!canvas) return;
       
       const ctx = canvas.getContext('2d');
       let width, height, columns, drops;
-      // Набор символов и коротких слов для эффекта
-      const chars = ['<', '>', '/', '=', '{', '}', '(', ')', '[', ']', '0', '1', 'a', 'b', 'c', 'x', 'y', 'z', 'const', 'let', 'if', 'for', 'npm', 'git', 'css', 'js'];
-      const fontSize = 14;
 
       function resize() {
         width = section.offsetWidth;
@@ -551,48 +565,41 @@
         columns = Math.floor(width / (fontSize * 2));
         drops = [];
         for (let x = 0; x < columns; x++) {
-          drops[x] = Math.random() * -100; // Начинаем выше экрана
+          drops[x] = Math.random() * -100;
         }
       }
 
-      function draw() {
-        // Заливка с прозрачностью создает эффект затухания (шлейф)
-        ctx.fillStyle = 'rgba(18, 18, 18, 0.1)';
+      resize();
+      window.addEventListener('resize', resize);
+
+      let lastTime = 0;
+      function draw(time) {
+        requestAnimationFrame(draw);
+        
+        const rect = section.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+
+        if (time - lastTime < 33) return;
+        lastTime = time;
+
+        ctx.fillStyle = 'rgba(18, 18, 18, 0.15)';
         ctx.fillRect(0, 0, width, height);
 
-        ctx.fillStyle = 'rgba(194, 106, 74, 0.8)'; // Цвет акцента
+        ctx.fillStyle = 'rgba(194, 106, 74, 0.8)';
         ctx.font = fontSize + 'px monospace';
 
         for (let i = 0; i < drops.length; i++) {
           const text = chars[Math.floor(Math.random() * chars.length)];
           ctx.fillText(text, i * fontSize * 2, drops[i] * fontSize);
 
-          // Сброс капли наверх
           if (drops[i] * fontSize > height && Math.random() > 0.975) {
             drops[i] = 0;
           }
-          drops[i]++;
+          drops[i] += 0.8;
         }
       }
-
-      resize();
-      window.addEventListener('resize', resize);
       
-      // Запускаем анимацию только когда секция видна на экране
-      let animId;
-      const bgObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            if (!animId) animId = setInterval(draw, 50); // 20 кадров в секунду
-          } else {
-            if (animId) {
-              clearInterval(animId);
-              animId = null;
-            }
-          }
-        });
-      }, { threshold: 0 });
-      bgObserver.observe(section);
+      requestAnimationFrame(draw);
     });
   }
   initCodeBackground();
@@ -737,7 +744,6 @@
       btn.textContent = 'Отправлено';
       this.reset();
       
-      // Возвращаем кнопку в исходное состояние через 3 секунды
       setTimeout(() => { btn.textContent = 'Отправить'; btn.disabled = false; }, 3000);
       
     } catch (e) {
