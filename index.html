@@ -32,6 +32,24 @@
     section { padding: 100px 0; border-bottom: 1px solid var(--border); }
     .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 60px; font-size: 18px; }
 
+    /* ================= ФОН С КОДОМ (АНИМАЦИЯ) ================= */
+    .code-bg-section {
+      position: relative;
+      overflow: hidden;
+    }
+    .code-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.25; /* Прозрачность, чтобы не мешало читать */
+    }
+    .code-bg-section .container {
+      position: relative;
+      z-index: 2; /* Контент выше фона */
+    }
+
     /* ================= ШАПКА ================= */
     .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18,18,18,0.95); border-bottom: 1px solid var(--border); transform: translateY(-100%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
     .header.show { transform: translateY(0); }
@@ -231,7 +249,9 @@
   </div>
 </header>
 
-<section class="hero">
+<!-- Главный экран с кодом на фоне -->
+<section class="hero code-bg-section" id="home">
+  <canvas class="code-canvas"></canvas>
   <div class="container reveal">
     <h1>Сайты, которые <br><span style="color: var(--accent); font-style: italic;">приносят клиентов</span></h1>
     <p>Дорогой дизайн, идеальная адаптация под мобильные телефоны и удобные админ-панели. Без шаблонов и лишнего шума.</p>
@@ -271,7 +291,9 @@
   </div>
 </section>
 
-<section id="portfolio">
+<!-- Портфолио с кодом на фоне -->
+<section id="portfolio" class="code-bg-section">
+  <canvas class="code-canvas"></canvas>
   <div class="container">
     <h2 class="reveal">Наши <span>работы</span></h2>
     <div class="portfolio-grid">
@@ -342,7 +364,9 @@
   </div>
 </section>
 
-<section id="reviews">
+<!-- Отзывы с кодом на фоне -->
+<section id="reviews" class="code-bg-section">
+  <canvas class="code-canvas"></canvas>
   <div class="container">
     <h2 class="reveal">Отзывы <span>клиентов</span></h2>
     <div class="reviews-grid" id="reviewsContainer">
@@ -354,7 +378,7 @@
       <form id="reviewForm">
         <div class="form-group"><input type="text" id="reviewName" placeholder="Ваше имя" required></div>
         <div class="form-group"><textarea id="reviewText" placeholder="Ваш отзыв..." required rows="4"></textarea></div>
-        <button type="submit" class="btn" style="width: 100%;" id="reviewSubmitBtn">Отправить на модерацию</button>
+        <button type="submit" class="btn" style="width: 100%;" id="reviewSubmitBtn">Отправить</button>
         <p id="reviewStatus" style="text-align:center; margin-top:10px; font-size:14px;"></p>
       </form>
     </div>
@@ -477,7 +501,6 @@
 </div>
 
 <script>
-  // Принудительный скролл вверх при загрузке страницы
   window.scrollTo(0, 0);
 
   setTimeout(() => document.getElementById('mainHeader').classList.add('show'), 500);
@@ -487,26 +510,92 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Плавный скролл без изменения URL (чтобы ссылка не менялась)
+  // Плавный скролл без изменения URL
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
       const targetId = this.getAttribute('href');
-      if (targetId === '#') return; // Игнорируем пустые ссылки
+      if (targetId === '#') return;
       
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
-        const headerOffset = 60; // Отступ сверху под шапку
+        const headerOffset = 60;
         const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       }
     });
   });
+
+  // ================= АНИМАЦИЯ ФОНА С КОДОМ =================
+  function initCodeBackground() {
+    const sections = document.querySelectorAll('.code-bg-section');
+    
+    sections.forEach(section => {
+      const canvas = section.querySelector('.code-canvas');
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      let width, height, columns, drops;
+      // Набор символов и коротких слов для эффекта
+      const chars = ['<', '>', '/', '=', '{', '}', '(', ')', '[', ']', '0', '1', 'a', 'b', 'c', 'x', 'y', 'z', 'const', 'let', 'if', 'for', 'npm', 'git', 'css', 'js'];
+      const fontSize = 14;
+
+      function resize() {
+        width = section.offsetWidth;
+        height = section.offsetHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        columns = Math.floor(width / (fontSize * 2));
+        drops = [];
+        for (let x = 0; x < columns; x++) {
+          drops[x] = Math.random() * -100; // Начинаем выше экрана
+        }
+      }
+
+      function draw() {
+        // Заливка с прозрачностью создает эффект затухания (шлейф)
+        ctx.fillStyle = 'rgba(18, 18, 18, 0.1)';
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.fillStyle = 'rgba(194, 106, 74, 0.8)'; // Цвет акцента
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(text, i * fontSize * 2, drops[i] * fontSize);
+
+          // Сброс капли наверх
+          if (drops[i] * fontSize > height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }
+
+      resize();
+      window.addEventListener('resize', resize);
+      
+      // Запускаем анимацию только когда секция видна на экране
+      let animId;
+      const bgObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (!animId) animId = setInterval(draw, 50); // 20 кадров в секунду
+          } else {
+            if (animId) {
+              clearInterval(animId);
+              animId = null;
+            }
+          }
+        });
+      }, { threshold: 0 });
+      bgObserver.observe(section);
+    });
+  }
+  initCodeBackground();
 
   // --- МОДАЛКА БРАУЗЕРА (Портфолио) ---
   const browserModal = document.getElementById('browserModal');
@@ -642,14 +731,20 @@
         text: document.getElementById('reviewText').value.trim()
       })});
       if (!res.ok) throw new Error();
-      status.textContent = 'Спасибо! Отзыв отправлен на модерацию.';
+      
+      status.textContent = 'Спасибо! Ваш отзыв принят.';
       status.style.color = '#10b981';
+      btn.textContent = 'Отправлено';
       this.reset();
+      
+      // Возвращаем кнопку в исходное состояние через 3 секунды
+      setTimeout(() => { btn.textContent = 'Отправить'; btn.disabled = false; }, 3000);
+      
     } catch (e) {
       status.textContent = 'Ошибка отправки.';
       status.style.color = '#ef4444';
-    } finally {
-      btn.textContent = 'Отправить на модерацию'; btn.disabled = false;
+      btn.textContent = 'Отправить';
+      btn.disabled = false;
     }
   });
 
