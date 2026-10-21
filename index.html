@@ -1,427 +1,401 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="description" content="XLMNR — создание сайтов и лендингов, которые приносят клиентов.">
-<meta name="theme-color" content="#050505">
-<title>XLMNR | Создание сайтов для бизнеса</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  :root { 
-    --bg: #050505; --surface: #111111; --accent: #10b981; --accent-hover: #059669;
-    --text: #ffffff; --text-muted: #9ca3af; --border: rgba(255,255,255,0.08); --smooth: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; position: relative; }
-  .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#121212">
+  <meta name="description" content="XLMNR — создание сайтов и лендингов, которые приносят клиентов. Дорогой дизайн, быстрая загрузка, заявки в Telegram.">
+  <title>XLMNR | Сайты, которые приносят клиентов</title>
+  <style>
+    /* ================= БАЗА ================= */
+    :root {
+      --bg: #121212;
+      --surface: #1a1a1a;
+      --surface-2: #242424;
+      --text: #f5f2eb;
+      --text-muted: #a3a3a3;
+      --accent: #c26a4a;
+      --accent-hover: #a65539;
+      --border: rgba(255,255,255,0.08);
+      --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --font-display: Georgia, "Times New Roman", serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; }
+    h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 20px; }
+    h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 15px; text-align: center; }
+    h2 span { font-style: italic; color: var(--accent); }
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; }
+    section { padding: 100px 0; border-bottom: 1px solid var(--border); }
 
-  /* ================= ГЛОБАЛЬНЫЙ ФОН ================= */
-  .global-code-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; opacity: 0.10; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; color: var(--accent); white-space: pre; filter: blur(0.4px); }
-  .global-code-bg .code-column { position: absolute; top: -100%; width: 12.5%; height: 200%; animation: scrollCode linear infinite; }
-  @keyframes scrollCode { from { transform: translateY(0); } to { transform: translateY(50%); } }
+    /* ================= ШАПКА ================= */
+    .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(18,18,18,0.95); border-bottom: 1px solid var(--border); transform: translateY(-100%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .header.show { transform: translateY(0); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; gap: 20px; }
+    .logo { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 0.05em; }
+    .logo span { color: var(--accent); }
+    .nav { display: flex; gap: 30px; }
+    .nav a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: color 0.3s; }
+    .nav a:hover { color: var(--text); }
 
-  /* ================= ПРЕЛОАДЕР ================= */
-  .preloader-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s, visibility 1s; }
-  .preloader-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .logo-composition { position: relative; z-index: 2; text-align: center; }
-  .full-logo { font-size: clamp(60px, 15vw, 120px); font-weight: 800; letter-spacing: 0.05em; display: flex; justify-content: center; gap: 2px; opacity: 0; transform: scale(0.9); transition: 1.5s; text-shadow: 0 0 30px rgba(0,0,0,0.8); }
-  .preloader-overlay.show-logo .full-logo { opacity: 1; transform: scale(1); }
-  .letter-x { color: var(--text); transition: 1.2s; }
-  .preloader-overlay.flash-green .letter-x { color: var(--accent); text-shadow: 0 0 30px rgba(16,185,129,0.9), 0 0 100px rgba(16,185,129,0.4); }
-  .slogan { margin-top: 30px; font-size: clamp(14px, 3vw, 18px); color: #9ca3af; opacity: 0; transform: translateY(15px); transition: 1.8s 0.4s; }
-  .preloader-overlay.flash-green .slogan { opacity: 1; transform: translateY(0); }
-  .slogan span { color: var(--accent); font-weight: 600; }
+    /* ================= КНОПКИ ================= */
+    .btn { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: #fff; padding: 14px 28px; border-radius: 4px; font-size: 15px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+    .btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(194, 106, 74, 0.2); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { background: var(--surface-2); border-color: var(--text-muted); }
 
-  /* ШАПКА */
-  .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); transform: translateY(-100%); transition: transform 0.8s var(--smooth); }
-  .header.show { transform: translateY(0); }
-  .header-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; gap: 20px; }
-  .logo { font-size: 24px; font-weight: 800; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-  .logo span { color: var(--accent); }
-  .nav { display: flex; gap: 30px; flex-shrink: 0; }
-  .nav a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.3s; }
-  .nav a:hover { color: var(--accent); }
-  .btn { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: #000; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; white-space: nowrap; }
-  .btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
-  .btn-outline { background: transparent; color: var(--accent); border: 2px solid var(--accent); }
-  .btn-outline:hover { background: rgba(16, 185, 129, 0.1); box-shadow: none; }
-  .header-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
-  .btn-discount { background: #f59e0b; color: #000; padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: 0.3s; animation: pulseDiscount 2s infinite; white-space: nowrap; }
-  @keyframes pulseDiscount { 0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); } 50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); } }
+    /* ================= ГЛАВНЫЙ ЭКРАН ================= */
+    .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 80px; text-align: center; }
+    .hero p { font-size: clamp(1.1rem, 2vw, 1.3rem); color: var(--text-muted); margin-bottom: 40px; max-width: 600px; margin-inline: auto; }
+    .hero-actions { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
 
-  /* СЕКЦИИ */
-  section { padding: 100px 0; position: relative; }
-  .section-title { font-size: clamp(32px, 5vw, 48px); font-weight: 800; text-align: center; margin-bottom: 15px; line-height: 1.2; }
-  .section-title span { color: var(--accent); }
-  .section-subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 60px; font-size: 18px; }
+    /* ================= УСЛУГИ (BENTO) ================= */
+    .bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+    .bento-item { background: var(--surface); padding: 40px; border-radius: 8px; border: 1px solid var(--border); grid-column: span 12; transition: 0.3s; }
+    .bento-item:hover { border-color: rgba(194, 106, 74, 0.4); transform: translateY(-4px); }
+    .bento-item h3 { font-size: 22px; margin-bottom: 10px; color: var(--accent); }
+    .bento-item p { color: var(--text-muted); font-size: 15px; }
+    @media (min-width: 768px) {
+      .bento-item.wide { grid-column: span 8; }
+      .bento-item.narrow { grid-column: span 4; }
+      .bento-item.third { grid-column: span 4; }
+    }
 
-  /* ГЛАВНЫЙ ЭКРАН */
-  .hero { min-height: 100vh; display: flex; align-items: center; position: relative; padding-top: 80px; }
-  .hero::before { content: ''; position: absolute; top: 20%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: var(--accent); filter: blur(200px); opacity: 0.15; z-index: -1; border-radius: 50%; }
-  .hero-content { text-align: center; max-width: 800px; margin: 0 auto; }
-  .hero h1 { font-size: clamp(40px, 7vw, 72px); font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
-  .hero h1 span { color: var(--accent); }
-  .hero p { font-size: clamp(16px, 2vw, 20px); color: var(--text-muted); margin-bottom: 40px; max-width: 600px; margin-inline: auto; }
-  .hero-actions { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+    /* ================= ПОРТФОЛИО ================= */
+    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .portfolio-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: 0.3s; }
+    .portfolio-item:hover { border-color: var(--accent); transform: translateY(-5px); }
+    .portfolio-img { width: 100%; aspect-ratio: 16/10; background: #222; display: flex; align-items: center; justify-content: center; position: relative; }
+    .portfolio-info { padding: 20px; }
+    .portfolio-info p { color: var(--accent); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .portfolio-info h3 { font-size: 20px; }
 
-  /* УСЛУГИ, ПОРТФОЛИО */
-  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 30px; }
-  .card { background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); padding: 40px 30px; border-radius: 20px; border: 1px solid var(--border); transition: 0.4s; position: relative; overflow: hidden; }
-  .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
-  .card:hover { border-color: rgba(16, 185, 129, 0.3); transform: translateY(-8px); background: rgba(22, 22, 22, 0.85); }
-  .card:hover::before { transform: scaleX(1); }
-  .card h3 { font-size: 22px; margin-bottom: 15px; }
-  .card p { color: var(--text-muted); font-size: 15px; }
+    /* ================= ТЕРМИНАЛ ================= */
+    .features-layout { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
+    @media (min-width: 900px) { .features-layout { grid-template-columns: 1fr 1fr; } }
+    .terminal-wrapper { background: #000; border-radius: 12px; border: 1px solid #333; overflow: hidden; font-family: 'Courier New', monospace; }
+    .terminal-header { background: #1a1a1a; padding: 10px 15px; display: flex; gap: 8px; border-bottom: 1px solid #333; }
+    .terminal-header span { width: 10px; height: 10px; border-radius: 50%; }
+    .terminal-header span:nth-child(1) { background: #ff5f56; }
+    .terminal-header span:nth-child(2) { background: #ffbd2e; }
+    .terminal-header span:nth-child(3) { background: #27c93f; }
+    .terminal-body { padding: 20px; height: 280px; overflow-y: auto; font-size: 14px; color: #ccc; line-height: 1.6; white-space: pre-wrap; }
+    .terminal-body .t-accent { color: var(--accent); }
+    .terminal-body .t-dim { color: #666; }
+    .terminal-body .t-white { color: #fff; font-weight: bold; }
+    .btn-run { width: 100%; margin-top: 20px; background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 15px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .btn-run:hover { background: var(--accent); color: #fff; }
 
-  .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
-  .portfolio-item { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); transition: 0.4s; cursor: pointer; position: relative; }
-  .portfolio-item:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-  .portfolio-img-wrapper { width: 100%; aspect-ratio: 16/10; position: relative; overflow: hidden; background: rgba(10, 10, 10, 0.7); display: flex; align-items: center; justify-content: center; }
-  .portfolio-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--text-muted); width: 100%; height: 100%; padding: 20px; text-align: center; }
-  .portfolio-placeholder svg { width: 40px; height: 40px; stroke: var(--accent); fill: none; stroke-width: 1.5; opacity: 0.6; }
-  .portfolio-placeholder span { font-size: 13px; font-weight: 600; }
-  .portfolio-overlay { position: absolute; inset: 0; background: rgba(5, 5, 5, 0.75); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-  .portfolio-item:hover .portfolio-overlay { opacity: 1; }
-  .portfolio-overlay span { background: var(--accent); color: #000; padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 13px; transform: translateY(10px); transition: transform 0.3s ease; }
-  .portfolio-item:hover .portfolio-overlay span { transform: translateY(0); }
-  .portfolio-info { padding: 20px; }
-  .portfolio-info p { color: var(--accent); font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+    /* ================= ОТЗЫВЫ ================= */
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .review-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 30px; position: relative; }
+    .review-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+    .review-avatar { width: 45px; height: 45px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 18px; }
+    .review-author { font-weight: 700; font-size: 16px; color: #fff; }
+    .review-date { font-size: 12px; color: var(--text-muted); }
+    .review-text { color: #ddd; font-size: 15px; line-height: 1.5; }
+    
+    .add-review-form { max-width: 600px; margin: 0 auto; background: var(--surface); padding: 30px; border-radius: 8px; border: 1px solid var(--border); }
+    .form-group { margin-bottom: 15px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 15px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 16px; }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
 
-  /* ПРЕИМУЩЕСТВА */
-  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-  .feature-list { display: flex; flex-direction: column; gap: 25px; }
-  .feature-item { display: flex; gap: 15px; }
-  .feature-icon { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #000; font-weight: bold; }
-  .feature-text h4 { font-size: 18px; margin-bottom: 5px; }
-  .feature-text p { color: var(--text-muted); font-size: 15px; }
-  .features-image { background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); border-radius: 20px; padding: 25px; border: 1px solid var(--border); position: relative; overflow: hidden; min-height: 320px; display: flex; flex-direction: column; }
+    /* ================= КОНТАКТЫ ================= */
+    .contact-form { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
 
-  /* ТЕРМИНАЛ */
-  .code-preview { font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.8; color: var(--accent); text-align: left; transition: 0.4s; }
-  .code-preview.hidden { opacity: 0; transform: scale(0.95); pointer-events: none; position: absolute; }
-  .terminal-wrapper { display: none; flex-direction: column; flex-grow: 1; width: 100%; background: #000; border-radius: 12px; border: 1px solid #333; overflow: hidden; font-family: 'Courier New', monospace; text-align: left; }
-  .terminal-wrapper.active { display: flex; }
-  .terminal-header { background: #1a1a1a; padding: 8px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #333; }
-  .terminal-header span { width: 10px; height: 10px; border-radius: 50%; } .terminal-header span:nth-child(1) { background: #ff5f56; } .terminal-header span:nth-child(2) { background: #ffbd2e; } .terminal-header span:nth-child(3) { background: #27c93f; }
-  .terminal-body { padding: 15px; flex-grow: 1; overflow-y: auto; height: 260px; font-size: 13px; line-height: 1.5; color: #ccc; white-space: pre-wrap; word-break: break-all; }
-  .terminal-body .t-accent { color: var(--accent); } .terminal-body .t-dim { color: #666; } .terminal-body .t-white { color: #fff; font-weight: bold; }
-  .btn-run { margin-top: 20px; width: 100%; padding: 14px; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 10px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; }
-  .btn-run:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+    /* ================= АДМИНКА ================= */
+    #adminPanel { display: none; position: fixed; inset: 0; background: #0a0a0a; z-index: 99999; overflow-y: auto; padding: 40px 20px; }
+    .admin-container { max-width: 900px; margin: 0 auto; background: #151515; padding: 30px; border-radius: 12px; border: 1px solid #333; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+    .admin-header h2 { color: var(--accent); margin: 0; font-size: 24px; }
+    .admin-close-btn { background: #ef4444; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .admin-review-card { background: #222; border: 1px solid #444; padding: 20px; border-radius: 8px; margin-bottom: 15px; }
+    .admin-review-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .admin-review-actions { display: flex; gap: 10px; margin-top: 15px; }
+    .btn-approve { background: #10b981; color: #000; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .btn-delete { background: #ef4444; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .admin-login { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 50px auto; text-align: center; }
+    .admin-login input { padding: 12px; background: #111; border: 1px solid #333; border-radius: 4px; color: #fff; font-size: 16px; text-align: center; }
+    .admin-login button { background: var(--accent); color: #fff; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
-  /* ================= БЛОК ОТЗЫВОВ ================= */
-  #reviews { background: rgba(10, 10, 10, 0.5); backdrop-filter: blur(5px); }
-  .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px; }
-  .review-card { background: rgba(17, 17, 17, 0.8); border: 1px solid var(--border); border-radius: 16px; padding: 25px; position: relative; }
-  .review-card::before { content: '“'; position: absolute; top: 10px; right: 20px; font-size: 60px; color: var(--accent); opacity: 0.2; font-family: serif; line-height: 1; }
-  .review-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-  .review-avatar { width: 45px; height: 45px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #000; font-size: 18px; }
-  .review-author { font-weight: 700; font-size: 16px; color: #fff; }
-  .review-date { font-size: 12px; color: var(--text-muted); }
-  .review-text { color: #ddd; font-size: 15px; line-height: 1.5; }
+    /* ================= ИИ-ЧАТ ================= */
+    .ai-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+    .ai-modal.open { opacity: 1; pointer-events: auto; }
+    .ai-window { background: var(--surface); width: 100%; max-width: 500px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; height: 600px; max-height: 90vh; overflow: hidden; }
+    .ai-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .ai-header h3 { font-size: 18px; color: var(--accent); }
+    .ai-close { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+    .ai-chat { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+    .msg { padding: 10px 15px; border-radius: 8px; max-width: 85%; font-size: 15px; }
+    .msg.bot { background: var(--surface-2); align-self: flex-start; }
+    .msg.user { background: var(--accent); color: #fff; align-self: flex-end; }
+    .ai-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+    .ai-input-area input { flex-grow: 1; background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 10px 15px; border-radius: 4px; outline: none; }
 
-  .add-review-form { max-width: 600px; margin: 0 auto; background: rgba(17, 17, 17, 0.6); padding: 30px; border-radius: 20px; border: 1px solid var(--border); }
-  .add-review-form h3 { text-align: center; margin-bottom: 20px; font-size: 22px; }
-  
-  /* ================= АДМИН ПАНЕЛЬ ================= */
-  #adminPanel { display: none; position: fixed; inset: 0; background: #0a0a0a; z-index: 99999; overflow-y: auto; padding: 40px 20px; }
-  .admin-container { max-width: 900px; margin: 0 auto; background: #151515; padding: 30px; border-radius: 20px; border: 1px solid #333; }
-  .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
-  .admin-header h2 { color: var(--accent); margin: 0; }
-  .admin-close-btn { background: #ef4444; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-  .admin-review-card { background: #222; border: 1px solid #444; padding: 20px; border-radius: 12px; margin-bottom: 15px; }
-  .admin-review-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-  .admin-review-actions { display: flex; gap: 10px; margin-top: 15px; }
-  .btn-approve { background: #10b981; color: #000; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-  .btn-delete { background: #ef4444; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-  .admin-login { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 50px auto; text-align: center; }
-  .admin-login input { padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 16px; text-align: center; }
-  .admin-login button { background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
-
-  /* КОНТАКТЫ И ПОДВАЛ */
-  .contact-section { background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(8px); border-top: 1px solid var(--border); }
-  .contact-form { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-  .form-group { display: flex; flex-direction: column; gap: 8px; }
-  .form-group input, .form-group textarea { width: 100%; padding: 16px; background: rgba(5, 5, 5, 0.7); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: inherit; font-size: 16px; transition: 0.3s; }
-  .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
-  .form-group textarea { resize: vertical; min-height: 100px; }
-  .footer { padding: 40px 0; text-align: center; color: var(--text-muted); font-size: 14px; background: rgba(5, 5, 5, 0.7); }
-
-  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s, transform 0.8s; }
-  .reveal.in { opacity: 1; transform: translateY(0); }
-
-  /* МОДАЛКА БРАУЗЕРА */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: 0.4s; }
-  .modal-overlay.open { opacity: 1; pointer-events: auto; }
-  .browser-window { width: 100%; max-width: 1100px; height: 85vh; background: #151515; border-radius: 16px; display: flex; flex-direction: column; box-shadow: 0 25px 80px rgba(0,0,0,0.9); border: 1px solid var(--border); transform: translateY(30px) scale(0.96); transition: 0.5s; overflow: hidden; }
-  .modal-overlay.open .browser-window { transform: translateY(0) scale(1); }
-  .browser-header { background: #1e1e1e; padding: 14px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #111; }
-  .browser-dots { display: flex; gap: 8px; }
-  .browser-dots span { width: 12px; height: 12px; border-radius: 50%; }
-  .browser-dots span:nth-child(1) { background: #ff5f56; cursor: pointer; } .browser-dots span:nth-child(2) { background: #ffbd2e; } .browser-dots span:nth-child(3) { background: #27c93f; }
-  .browser-address { flex-grow: 1; background: #111; border-radius: 8px; padding: 8px 16px; color: #aaa; font-size: 13px; font-family: monospace; }
-  .browser-body { flex-grow: 1; background: #000; }
-  .browser-iframe { width: 100%; height: 100%; border: none; }
-
-  @media (max-width: 900px) { .nav { display: none; } }
-  @media (max-width: 768px) {
-    .header-inner { justify-content: center; gap: 10px; flex-wrap: wrap; height: auto; padding: 12px 0; }
-    .header-actions { flex-wrap: wrap; justify-content: center; }
-    .features { grid-template-columns: 1fr; }
-    .hero-actions { flex-direction: column; }
-    .btn { width: 100%; }
-    section { padding: 60px 0; }
-    .browser-address { display: none; }
-    .browser-window { height: 90vh; }
-  }
-</style>
+    /* ================= ПОДВАЛ ================= */
+    .footer { padding: 40px 0; text-align: center; color: var(--text-muted); font-size: 14px; }
+    
+    /* Анимации */
+    .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    
+    @media (max-width: 768px) {
+      .nav { display: none; }
+      section { padding: 60px 0; }
+      .hero-actions { flex-direction: column; }
+      .btn { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-
-<script>
-  if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
-  window.scrollTo(0, 0);
-</script>
-
-<div class="global-code-bg" id="globalCodeBg"></div>
-
-<div class="preloader-overlay" id="preloader">
-  <div class="logo-composition">
-    <div class="full-logo"><span class="letter-x">X</span><span>LMNR</span></div>
-    <div class="slogan">Создем <span>сайты/лендинги</span>, которые приносят клиентов</div>
-  </div>
-</div>
-
-<script>
-  const codeLines = ['const express = require("express");','app.use(express.json());','// TODO: optimize this function','function calculateTotal(items) { return items.reduce((sum, item) => sum + item.price, 0); }','const isValid = email.includes("@");','// FIXME: memory leak'];
-  function generateCodeText(linesCount) { let text = ''; for (let i = 0; i < linesCount; i++) text += codeLines[Math.floor(Math.random() * codeLines.length)] + '\n'; return text; }
-  function createCodeColumns(container, count, widthPercent, linesPerCol) {
-    for (let i = 0; i < count; i++) {
-      const column = document.createElement('div');
-      column.className = 'code-column'; column.style.animationDuration = (40 + Math.random() * 60) + 's';
-      column.style.animationDelay = (Math.random() * 15) + 's'; column.style.left = (i * widthPercent) + '%';
-      column.style.width = widthPercent + '%'; column.textContent = generateCodeText(linesPerCol);
-      container.appendChild(column);
-    }
-  }
-  createCodeColumns(document.getElementById('globalCodeBg'), 8, 12.5, 60);
-  
-  (function() {
-    const preloader = document.getElementById('preloader');
-    setTimeout(() => preloader.classList.add('show-logo'), 300);
-    setTimeout(() => preloader.classList.add('flash-green'), 2500);
-    setTimeout(() => { preloader.classList.add('hidden'); document.getElementById('mainHeader').classList.add('show'); }, 5500);
-  })();
-</script>
 
 <header class="header" id="mainHeader">
   <div class="container header-inner">
     <a href="#" class="logo"><span>X</span>LMNR</a>
     <nav class="nav">
       <a href="#services">Услуги</a>
-      <a href="#portfolio">Портфолио</a>
+      <a href="#portfolio">Работы</a>
+      <a href="#benefits">Почему мы</a>
       <a href="#reviews">Отзывы</a>
-      <a href="#benefits">Преимущества</a>
       <a href="#contact">Контакты</a>
     </nav>
-    <div class="header-actions">
-      <a href="#contact" class="btn">Обсудить проект</a>
-      <button class="btn-discount" id="discountBtn">Получить скидку</button>
-    </div>
+    <a href="#contact" class="btn">Обсудить проект</a>
   </div>
 </header>
 
 <section class="hero">
-  <div class="container hero-content">
-    <h1 class="reveal">Сайты, <br>которые <span>приносят клиентов</span> <span style="font-size: 0.4em; color: #f59e0b; vertical-align: super; margin-left: 10px; font-weight: 800;">V1</span></h1>
-    <p class="reveal">Современный дизайн, идеальная адаптация под телефоны и удобные админ-панели.</p>
-    <div class="hero-actions reveal">
+  <div class="container reveal">
+    <h1>Сайты, которые <br><span style="color: var(--accent); font-style: italic;">приносят клиентов</span></h1>
+    <p>Дорогой дизайн, идеальная адаптация под мобильные телефоны и удобные админ-панели. Без шаблонов и лишнего шума.</p>
+    <div class="hero-actions">
       <a href="#contact" class="btn">Заказать сайт</a>
       <a href="#portfolio" class="btn btn-outline">Смотреть работы</a>
     </div>
   </div>
 </section>
 
-<section id="services">
+<section id="services" style="background: #0d0d0d;">
   <div class="container">
-    <h2 class="section-title reveal">Наши <span>услуги</span></h2>
-    <div class="grid-3">
-      <div class="card reveal"><h3>Лендинги</h3><p>Продающие одностраничники для услуг. Идеально для запуска рекламы.</p></div>
-      <div class="card reveal"><h3>Корпоративные сайты</h3><p>Многостраничные сайты для компаний. Солидный имидж и каталог.</p></div>
-      <div class="card reveal"><h3>Сложный функционал</h3><p>Разработка кастомных решений и интеграция с CRM.</p></div>
+    <h2 class="reveal">Наши <span>услуги</span></h2>
+    <p class="section-subtitle reveal">Всё, что нужно для запуска и роста вашего бизнеса в интернете.</p>
+    <div class="bento">
+      <div class="bento-item wide reveal">
+        <h3>Продающие лендинги</h3>
+        <p>Идеально для запуска рекламы. Быстрая загрузка, четкая структура, интеграция с CRM и Telegram.</p>
+      </div>
+      <div class="bento-item narrow reveal">
+        <h3>Сайты-визитки</h3>
+        <p>Солидный имидж для эксперта или компании. Строгий дизайн и понятная подача.</p>
+      </div>
+      <div class="bento-item third reveal">
+        <h3>Интеграции</h3>
+        <p>Подключим оплату, CRM, аналитику и уведомления в Telegram.</p>
+      </div>
+      <div class="bento-item third reveal">
+        <h3>SEO-база</h3>
+        <p>Schema.org, мета-теги и скорость, чтобы вас находили в поиске.</p>
+      </div>
+      <div class="bento-item third reveal">
+        <h3>ИИ-Ассистенты</h3>
+        <p>Умный бот на сайте, который ответит на вопросы клиентов 24/7.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="portfolio" style="background: #080808;">
+<section id="portfolio">
   <div class="container">
-    <h2 class="section-title reveal">Наши <span>работы</span></h2>
+    <h2 class="reveal">Наши <span>работы</span></h2>
     <div class="portfolio-grid">
-      <div class="portfolio-item reveal" id="openAutoazbuka">
-        <div class="portfolio-img-wrapper">
-          <div class="portfolio-placeholder"><span>Автосервис</span></div>
-          <div class="portfolio-overlay"><span>Смотреть сайт</span></div>
+      <div class="portfolio-item reveal" onclick="alert('Демо-кейс: Автосервис')">
+        <div class="portfolio-img" style="background: linear-gradient(135deg, #2b2b2b, #111);">
+          <h2 style="color: rgba(255,255,255,0.1); font-size: 40px; font-family: var(--font-display);">Auto</h2>
         </div>
-        <div class="portfolio-info"><p>Автосервис • Сайт под ключ</p></div>
+        <div class="portfolio-info">
+          <p>Автосервис • Сайт под ключ</p>
+          <h3>Премиум ремонт авто</h3>
+        </div>
       </div>
-      <div class="portfolio-item reveal">
-        <div class="portfolio-img-wrapper"><div class="portfolio-placeholder"><span>Скоро</span></div></div>
-        <div class="portfolio-info"><p>Новый проект • В разработке</p></div>
+      <div class="portfolio-item reveal" onclick="alert('Скоро здесь будет новый кейс')">
+        <div class="portfolio-img" style="background: linear-gradient(135deg, #1a1a1a, #050505);">
+           <h2 style="color: rgba(255,255,255,0.1); font-size: 40px; font-family: var(--font-display);">Edu</h2>
+        </div>
+        <div class="portfolio-info">
+          <p>Онлайн-школа • Лендинг</p>
+          <h3>Курсы по дизайну</h3>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= СЕКЦИЯ ОТЗЫВОВ ================= -->
+<section id="benefits" style="background: #0d0d0d;">
+  <div class="container features-layout">
+    <div class="reveal">
+      <h2 style="text-align: left;">Почему <span>XLMNR</span>?</h2>
+      <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 18px;">Мы пишем чистый код. Ваш сайт будет летать даже на слабом интернете, а поисковики будут вас любить.</p>
+      <ul style="color: var(--text-muted); margin-left: 20px; line-height: 2;">
+        <li>Никаких тяжелых конструкторов</li>
+        <li>Идеальный мобильный вид (80% трафика)</li>
+        <li>Прозрачные сроки и фикс-цена</li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="terminal-wrapper">
+        <div class="terminal-header"><span></span><span></span><span></span></div>
+        <div class="terminal-body" id="terminalBody"></div>
+      </div>
+      <button class="btn-run" id="btnRunCode">▶ Запустить код (Пасхалка)</button>
+    </div>
+  </div>
+</section>
+
 <section id="reviews">
   <div class="container">
-    <h2 class="section-title reveal">Отзывы <span>клиентов</span></h2>
-    <p class="section-subtitle reveal">Что говорят о нашей работе.</p>
-    
+    <h2 class="reveal">Отзывы <span>клиентов</span></h2>
     <div class="reviews-grid" id="reviewsContainer">
-      <p style="text-align:center; width:100%; color:#666;">Загрузка отзывов...</p>
+      <p style="text-align:center; width:100%; color:var(--text-muted);">Загрузка отзывов...</p>
     </div>
 
     <div class="add-review-form reveal">
-      <h3>Оставить отзыв</h3>
+      <h3 style="text-align:center; margin-bottom: 20px;">Оставить отзыв</h3>
       <form id="reviewForm">
         <div class="form-group"><input type="text" id="reviewName" placeholder="Ваше имя" required></div>
-        <div class="form-group"><textarea id="reviewText" placeholder="Ваш отзыв..." required></textarea></div>
-        <button type="submit" class="btn" id="reviewSubmitBtn">Оставить отзыв</button>
+        <div class="form-group"><textarea id="reviewText" placeholder="Ваш отзыв..." required rows="4"></textarea></div>
+        <button type="submit" class="btn" style="width: 100%;" id="reviewSubmitBtn">Отправить на модерацию</button>
         <p id="reviewStatus" style="text-align:center; margin-top:10px; font-size:14px;"></p>
       </form>
     </div>
   </div>
 </section>
 
-<section id="benefits">
+<section id="contact" style="background: #0d0d0d;">
   <div class="container">
-    <div class="features">
-      <div class="reveal">
-        <h2 class="section-title" style="text-align: left; margin-bottom: 30px;">Почему стоит <span>работать с нами</span></h2>
-        <div class="feature-list">
-          <div class="feature-item"><div class="feature-icon">✓</div><div class="feature-text"><h4>Идеальный мобильный вид</h4><p>Более 80% клиентов заходят с телефонов.</p></div></div>
-          <div class="feature-item"><div class="feature-icon">✓</div><div class="feature-text"><h4>Скорость загрузки</h4><p>Пишем чистый код без тяжелых конструкторов.</p></div></div>
-          <div class="feature-item"><div class="feature-icon">✓</div><div class="feature-text"><h4>Честные сроки и цены</h4><p>Работаем по четкому ТЗ.</p></div></div>
-        </div>
-      </div>
-      <div class="features-image reveal" id="featuresImage">
-        <div class="code-preview" id="codePreview">&lt;!-- Ваш идеальный сайт --&gt;</div>
-        <div class="terminal-wrapper" id="terminalWrapper">
-          <div class="terminal-header"><span></span><span></span><span></span></div>
-          <div class="terminal-body" id="terminalBody"></div>
-        </div>
-        <button class="btn-run" id="btnRunCode">▶ Запустить код<span class="hint">Дочитай до конца и получи подарок</span></button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="contact" class="contact-section">
-  <div class="container">
-    <h2 class="section-title reveal">Давайте <span>работать</span></h2>
-    <p class="section-subtitle reveal">Оставьте заявку, и мы свяжемся с вами.</p>
+    <h2 class="reveal">Давайте <span>работать</span></h2>
+    <p class="section-subtitle reveal">Оставьте заявку, и я свяжусь с вами в течение рабочего дня.</p>
     <form class="contact-form reveal" id="contactForm">
       <div class="form-group"><input type="text" id="clientName" placeholder="Ваше имя" required></div>
       <div class="form-group"><input type="text" id="clientPhone" placeholder="Телефон или Telegram" required></div>
-      <div class="form-group"><textarea id="clientMessage" placeholder="Какой сайт вам нужен?" required></textarea></div>
-      <button type="submit" class="btn" id="submitBtn">Отправить заявку</button>
+      <div class="form-group"><textarea id="clientMessage" placeholder="Какой сайт вам нужен?" rows="3"></textarea></div>
+      <!-- Honeypot (скрытое поле от ботов) -->
+      <input type="text" id="website" style="display:none" tabindex="-1" autocomplete="off">
+      <button type="submit" class="btn" id="submitBtn" style="width: 100%;">Отправить заявку</button>
     </form>
   </div>
 </section>
 
 <footer class="footer">
-  <div class="container"><p>&copy; <span id="year"></span> XLMNR. Создание сайтов под ключ.</p></div>
+  <div class="container">
+    <p>&copy; <span id="year"></span> XLMNR. Создание сайтов под ключ.</p>
+    <p style="margin-top: 10px; font-size: 12px;">
+      <a href="#" onclick="openAdmin()" style="color: var(--text-muted); text-decoration: none;">Админка</a>
+    </p>
+  </div>
 </footer>
 
-<!-- МОДАЛКА БРАУЗЕРА -->
-<div class="modal-overlay" id="browserModal">
-  <div class="browser-window">
-    <div class="browser-header">
-      <div class="browser-dots"><span id="dotClose"></span><span></span><span></span></div>
-      <div class="browser-address">autoservice</div>
+<!-- Кнопка вызова ИИ -->
+<button class="btn" style="position: fixed; bottom: 20px; right: 20px; z-index: 999; border-radius: 50%; width: 60px; height: 60px; padding: 0; box-shadow: 0 4px 15px rgba(194, 106, 74, 0.4);" onclick="document.getElementById('aiModal').classList.add('open')">ИИ</button>
+
+<!-- Модалка ИИ -->
+<div class="ai-modal" id="aiModal">
+  <div class="ai-window">
+    <div class="ai-header">
+      <h3>ИИ-Ассистент XLMNR</h3>
+      <button class="ai-close" onclick="document.getElementById('aiModal').classList.remove('open')">×</button>
     </div>
-    <div class="browser-body"><iframe class="browser-iframe" src="autoservice/avtoazbuka.html" loading="lazy"></iframe></div>
+    <div class="ai-chat" id="aiChat">
+      <div class="msg bot">Привет! Я ИИ-помощник. Спросите меня про цены, сроки или услуги.</div>
+    </div>
+    <div class="ai-input-area">
+      <input type="text" id="aiInput" placeholder="Например: сколько стоит лендинг?" onkeypress="if(event.key === 'Enter') sendAiMessage()">
+      <button class="btn" onclick="sendAiMessage()">→</button>
+    </div>
   </div>
 </div>
 
-<!-- ================= СКРЫТАЯ АДМИН ПАНЕЛЬ ОТЗЫВОВ ================= -->
+<!-- Админка -->
 <div id="adminPanel">
   <div class="admin-container">
     <div class="admin-header">
       <h2>Модерация отзывов</h2>
       <button class="admin-close-btn" onclick="closeAdmin()">Закрыть</button>
     </div>
-    
     <div class="admin-login" id="adminLoginForm">
-      <input type="password" id="adminPassword" placeholder="Введите пароль">
+      <p style="color: var(--text-muted); margin-bottom: 10px;">Введите пароль администратора</p>
+      <input type="password" id="adminPassword" placeholder="Пароль">
       <button onclick="loginAdmin()">Войти</button>
     </div>
-
-    <div id="adminReviewsList" style="display:none;">
-      <!-- Сюда будут подгружаться отзывы -->
-    </div>
+    <div id="adminReviewsList" style="display:none;"></div>
   </div>
 </div>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // --- НАСТРОЙКИ API ---
-  const REVIEWS_API_URL = 'https://reviews-api.xlmnr.workers.dev';
-  const ADMIN_PASSWORD = 'XXXpoltos123'; // ТВОЙ ПАРОЛЬ
+  // Прелоадер (показываем шапку)
+  setTimeout(() => document.getElementById('mainHeader').classList.add('show'), 500);
 
-  // --- АНИМАЦИИ ---
-  const revealElements = document.querySelectorAll('.reveal');
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in'); revealObserver.unobserve(entry.target); } });
+  // Анимации появления
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); } });
   }, { threshold: 0.1 });
-  revealElements.forEach(el => revealObserver.observe(el));
-
-  // --- МОДАЛКА ---
-  const modal = document.getElementById('browserModal');
-  document.getElementById('openAutoazbuka').addEventListener('click', () => { modal.classList.add('open'); document.body.style.overflow = 'hidden'; });
-  document.getElementById('dotClose').addEventListener('click', () => { modal.classList.remove('open'); document.body.style.overflow = ''; });
-  modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.remove('open'); document.body.style.overflow = ''; } });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
   // --- ТЕРМИНАЛ ---
-  const discountBtn = document.getElementById('discountBtn');
   const btnRun = document.getElementById('btnRunCode');
-  discountBtn.addEventListener('click', () => { document.getElementById('benefits').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => { if (btnRun.textContent.includes('Запустить')) btnRun.click(); }, 800); });
+  const term = document.getElementById('terminalBody');
+  let isRunning = false;
+
   btnRun.addEventListener('click', async () => {
-    if (btnRun.disabled) return; btnRun.disabled = true; btnRun.textContent = 'Выполняется...';
-    document.getElementById('codePreview').style.opacity = '0';
-    document.getElementById('terminalWrapper').classList.add('active');
-    const term = document.getElementById('terminalBody');
-    const sleep = ms => new Promise(r => setTimeout(r, ms));
-    const type = async (txt, cls='') => { const s=document.createElement('span'); s.className=cls; term.appendChild(s); for(let i=0;i<txt.length;i++){s.textContent+=txt[i]; term.scrollTop=term.scrollHeight; await sleep(30);} };
+    if (isRunning) return;
+    isRunning = true;
+    btnRun.textContent = 'Выполняется...';
+    term.innerHTML = '';
     
-    await type('user@xlmr:~$ ', 't-accent'); await type('color 2\n', 't-white');
-    await type('user@xlmr:~$ ', 't-accent'); await type('создать крутой сайт\n', 't-white');
-    for(let i=0;i<10;i++){ await type('Loading assets...\n', 't-dim'); }
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const type = async (txt, cls='') => { 
+      const s = document.createElement('span'); 
+      s.className = cls; 
+      term.appendChild(s); 
+      for(let i=0; i<txt.length; i++){ 
+        s.textContent += txt[i]; 
+        term.scrollTop = term.scrollHeight; 
+        await sleep(20);
+      } 
+    };
+
+    await type('user@xlmr:~$ ', 't-accent'); await type('init_site.js\n', 't-white');
+    await sleep(500);
+    for(let i=0; i<5; i++){ await type('> Optimizing assets...\n', 't-dim'); await sleep(300); }
     await type('> // Компиляция завершена успешно.\n', 't-accent');
     await type('> // Держи промокод на скидку 10%: XLMNR10\n', 't-white');
-    btnRun.textContent = '▶ Запустить код'; btnRun.disabled = false;
+    
+    btnRun.textContent = '▶ Запустить код';
+    isRunning = false;
   });
 
-  // --- ФОРМА ЗАЯВКИ (TELEGRAM) ---
+  // --- ОТПРАВКА ЗАЯВКИ (в /tg/) ---
   document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
     btn.textContent = 'Отправляется...'; btn.disabled = true;
+    
     try {
-      await fetch('https://tg-proxy.xlmnr.workers.dev/', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+      const res = await fetch('/tg/', { // Относительный путь
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: document.getElementById('clientName').value.trim(),
           phone: document.getElementById('clientPhone').value.trim(),
-          message: document.getElementById('clientMessage').value.trim()
+          message: document.getElementById('clientMessage').value.trim(),
+          website: document.getElementById('website').value // Honeypot
         })
       });
-      btn.textContent = 'Заявка отправлена!'; this.reset();
+      if (!res.ok) throw new Error();
+      btn.textContent = 'Заявка отправлена!'; 
+      this.reset();
     } catch (err) {
       btn.textContent = 'Ошибка';
     } finally {
@@ -429,17 +403,15 @@
     }
   });
 
-  // ==========================================
-  // ЛОГИКА ОТЗЫВОВ (КЛИЕНТСКАЯ ЧАСТЬ)
-  // ==========================================
+  // --- ОТЗЫВЫ (в /api/reviews) ---
   async function loadReviews() {
     const container = document.getElementById('reviewsContainer');
     try {
-      const res = await fetch(`${REVIEWS_API_URL}/api/reviews`);
+      const res = await fetch('/api/reviews'); // Относительный путь
       const reviews = await res.json();
       
       if (!reviews || reviews.length === 0) {
-        container.innerHTML = '<p style="text-align:center; width:100%; color:#666;">Пока нет отзывов. Станьте первым!</p>';
+        container.innerHTML = '<p style="text-align:center; width:100%; color:var(--text-muted);">Пока нет отзывов. Станьте первым!</p>';
         return;
       }
 
@@ -472,34 +444,32 @@
     btn.textContent = 'Отправка...'; btn.disabled = true;
 
     try {
-      await fetch(`${REVIEWS_API_URL}/api/reviews`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: document.getElementById('reviewName').value.trim(),
-          text: document.getElementById('reviewText').value.trim()
-        })
-      });
-      status.textContent = 'Спасибо! Отзыв отправлен.';
+      const res = await fetch('/api/reviews', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+        name: document.getElementById('reviewName').value.trim(),
+        text: document.getElementById('reviewText').value.trim()
+      })});
+      if (!res.ok) throw new Error();
+      status.textContent = 'Спасибо! Отзыв отправлен на модерацию.';
       status.style.color = '#10b981';
       this.reset();
     } catch (e) {
       status.textContent = 'Ошибка отправки.';
       status.style.color = '#ef4444';
     } finally {
-      btn.textContent = 'Отправить'; btn.disabled = false;
+      btn.textContent = 'Отправить на модерацию'; btn.disabled = false;
     }
   });
 
   loadReviews();
 
-  // ==========================================
-  // АДМИН-ПАНЕЛЬ (ОБНОВЛЕННЫЙ БЛОК)
-  // ==========================================
-  if (window.location.hash === '#admin') {
+  // --- АДМИНКА ---
+  const ADMIN_PASS = 'XXXpoltos123'; // Вводим пароль, но на сервере он тоже проверяется
+
+  if (window.location.hash === '#admin') openAdmin();
+
+  function openAdmin() {
     document.getElementById('adminPanel').style.display = 'block';
-    if (sessionStorage.getItem('adminAuth') === 'true') {
-      showAdminReviews();
-    }
+    if (sessionStorage.getItem('adminAuth') === 'true') showAdminReviews();
   }
 
   function closeAdmin() {
@@ -510,7 +480,7 @@
 
   function loginAdmin() {
     const pass = document.getElementById('adminPassword').value;
-    if (pass === ADMIN_PASSWORD) {
+    if (pass === ADMIN_PASS) {
       sessionStorage.setItem('adminAuth', 'true');
       showAdminReviews();
     } else {
@@ -525,21 +495,15 @@
     list.innerHTML = 'Загрузка...';
 
     try {
-      const res = await fetch(`${REVIEWS_API_URL}/api/admin/reviews`, {
-        headers: { 'X-Admin-Key': ADMIN_PASSWORD }
+      const res = await fetch('/api/admin/reviews', {
+        headers: { 'Authorization': `Bearer ${ADMIN_PASS}` } // Передаем пароль в заголовке
       });
-
-      // Если сервер вернул ошибку (например, 401 или 500)
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Сервер вернул ${res.status}: ${errorText}`);
-      }
-
-      const reviews = await res.json();
+      if (!res.ok) throw new Error('Ошибка авторизации');
       
+      const reviews = await res.json();
       list.innerHTML = '';
       if (!reviews || reviews.length === 0) {
-        list.innerHTML = '<p style="color:#aaa; text-align:center;">Пока нет отзывов. Когда кто-то оставит отзыв на сайте, он появится здесь.</p>';
+        list.innerHTML = '<p style="color:#aaa; text-align:center;">Пока нет отзывов.</p>';
         return;
       }
 
@@ -562,26 +526,55 @@
         `;
       });
     } catch (e) {
-      // Выводим текст ошибки прямо в панель
       list.innerHTML = `<p style="color:#ef4444; text-align:center;">Ошибка: ${e.message}</p>`;
     }
   }
 
   async function approveReview(id) {
-    await fetch(`${REVIEWS_API_URL}/api/admin/reviews/${id}`, {
-      method: 'PUT',
-      headers: { 'X-Admin-Key': ADMIN_PASSWORD }
+    await fetch(`/api/admin/reviews/${id}`, {
+      method: 'PUT', headers: { 'Authorization': `Bearer ${ADMIN_PASS}` }
     });
     showAdminReviews(); 
   }
 
   async function deleteReview(id) {
     if(!confirm('Удалить этот отзыв?')) return;
-    await fetch(`${REVIEWS_API_URL}/api/admin/reviews/${id}`, {
-      method: 'DELETE',
-      headers: { 'X-Admin-Key': ADMIN_PASSWORD }
+    await fetch(`/api/admin/reviews/${id}`, {
+      method: 'DELETE', headers: { 'Authorization': `Bearer ${ADMIN_PASS}` }
     });
     showAdminReviews(); 
+  }
+
+  // --- ИИ-ЧАТ ---
+  async function sendAiMessage() {
+    const input = document.getElementById('aiInput');
+    const chat = document.getElementById('aiChat');
+    const text = input.value.trim();
+    if (!text) return;
+
+    // Сообщение пользователя
+    chat.innerHTML += `<div class="msg user">${text}</div>`;
+    input.value = '';
+    chat.scrollTop = chat.scrollHeight;
+
+    // Заглушка "Печатает..."
+    const loadingId = 'loading-' + Date.now();
+    chat.innerHTML += `<div class="msg bot" id="${loadingId}">...</div>`;
+    chat.scrollTop = chat.scrollHeight;
+
+    try {
+      const res = await fetch('/api/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json();
+      
+      document.getElementById(loadingId).textContent = data.text || 'Ошибка ответа ИИ.';
+    } catch (e) {
+      document.getElementById(loadingId).textContent = 'ИИ временно недоступен.';
+    }
+    chat.scrollTop = chat.scrollHeight;
   }
 </script>
 </body>
