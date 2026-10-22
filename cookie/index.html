@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+  <base target="_self">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Политика использования cookie | XLMNR</title>
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; background: #121212; color: #f5f2eb; line-height: 1.6; padding: 20px; }
-    .container { max-width: 900px; margin: 0 auto; background: #1a1a1a; padding: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); }
+    .container { max-width: 900px; margin: 0 auto; background: #1a1a1a; padding: clamp(20px, 4vw, 40px); border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); } h1 { font-size: clamp(1.45rem, 4vw, 1.75rem); text-wrap: balance; } .back-btn { min-height: 44px; }
     h1 { font-family: Georgia, serif; color: #c26a4a; margin-bottom: 20px; font-size: 28px; font-weight: 400; }
     h2 { font-size: 20px; margin-top: 30px; margin-bottom: 10px; color: #fff; font-weight: 600; }
     p, ul { margin-bottom: 15px; color: #a3a3a3; font-size: 15px; }
@@ -21,7 +22,7 @@
 </head>
 <body>
   <div class="container">
-    <a href="/" class="back-btn">← На главную</a>
+    <a href="/" class="back-btn" target="_self">← На главную</a>
     <h1>Политика использования файлов cookie</h1>
     <span class="date">Редакция от 22 октября 2026 года.</span>
 
@@ -42,6 +43,12 @@
 
     <h2>4. Передача данных</h2>
     <p>Данные cookie могут обрабатываться сервисом Яндекс.Метрика (ООО «ЯНДЕКС») и хостинг-провайдером Cloudflare. Мы не продаем эти данные третьим лицам.</p>
+
+    <h2>5. Срок хранения</h2>
+    <p>Выбор в баннере сохраняется в localStorage на 12 месяцев. Необходимые cookie сессии живут, пока открыт сайт. Аналитические cookie Яндекс.Метрики задаёт сам сервис и только после согласия «Принять все».</p>
+
+    <h2>6. Отказ и изменение решения</h2>
+    <p>Кнопка «Настройки cookie» в подвале открывает выбор заново в этом же окне. «Только необходимые» отключает аналитику. Отключение cookie в браузере может ограничить отправку форм.</p>
   </div>
 </body>
 </html>

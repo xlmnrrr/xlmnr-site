@@ -456,7 +456,7 @@
         <div class="form-group"><textarea id="reviewText" placeholder="Ваш отзыв..." required rows="4" maxlength="1000"></textarea></div>
         <div class="consent-group">
           <input type="checkbox" id="reviewConsent" required>
-          <label for="reviewConsent">Согласен(на) на публикацию имени и текста отзыва. <a href="/consent" target="_blank" rel="noopener">Согласие</a> <span style="color:#ef4444">*</span></label>
+          <label for="reviewConsent">Согласен(на) на публикацию имени и текста отзыва. <a href="/consent">Согласие</a> <span style="color:#ef4444">*</span></label>
         </div>
         <button type="submit" class="btn" style="width: 100%;" id="reviewSubmitBtn">Отправить</button>
         <p id="reviewStatus" style="text-align:center; margin-top:10px; font-size:14px;"></p>
@@ -480,7 +480,7 @@
       <div class="consent-group">
         <input type="checkbox" id="consentPd" required>
         <label for="consentPd">
-          Я ознакомлен(а) с <a href="/privacy" target="_blank">Политикой обработки ПДн</a> и даю <a href="/consent" target="_blank">Согласие на обработку персональных данных</a> <span style="color:#ef4444">*</span>
+          Я ознакомлен(а) с <a href="/privacy">Политикой обработки ПДн</a> и даю <a href="/consent">Согласие на обработку персональных данных</a> <span style="color:#ef4444">*</span>
         </label>
       </div>
 
@@ -516,7 +516,7 @@
       <div class="footer-col">
         <h4>Связаться с нами</h4>
         <ul class="footer-links">
-          <li><a href="https://t.me/xlmnrrr" target="_blank">Telegram: @xlmnrrr</a></li>
+          <li><a href="https://t.me/xlmnrrr" target="_blank" rel="noopener noreferrer">Telegram: @xlmnrrr</a></li>
           <li><a href="mailto:makar.ulyanov.02@mail.ru">makar.ulyanov.02@mail.ru</a></li>
         </ul>
       </div>
@@ -529,7 +529,8 @@
           <!-- Требования 149-ФЗ -->
           Самозанятый Ульянов Макар Максимович<br>
           ИНН: 027882435822<br>
-          Адрес: г. Уфа
+          Адрес: г. Уфа<br>
+          Информационная продукция: 0+
         </div>
       </div>
       <div class="footer-bottom-center">
@@ -546,7 +547,7 @@
 <div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Использование файлов cookie" hidden>
   <div class="cookie-banner__text">
     Мы используем cookie для работы сайта и аналитики. Вы можете принять все, только необходимые или настроить.
-    <a href="/cookie" target="_blank">Политика cookie</a> · <a href="/privacy" target="_blank">Политика ПДн</a>
+    <a href="/cookie">Политика cookie</a> · <a href="/privacy">Политика ПДн</a>
   </div>
   <div class="cookie-banner__actions">
     <button class="btn btn-outline btn-small" type="button" data-cookie="necessary" style="min-height:44px; padding: 0 16px; font-size:13px;">Только необходимые</button>
@@ -670,9 +671,14 @@
       
       // Оптимизация для мобильных: уменьшаем количество колонок
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const saveData = navigator.connection && navigator.connection.saveData;
+      const cores = navigator.hardwareConcurrency || 4;
+      const weak = saveData || cores <= 4 || window.innerWidth < 1024;
+      if (weak && bg !== document.querySelector('.hero .css-code-bg')) return;
       const isMobile = window.innerWidth < 768;
-      const colWidth = isMobile ? 72 : 52;
-      const colCount = Math.min(isMobile ? 8 : 16, Math.max(4, Math.floor(window.innerWidth / colWidth)));
+      const colWidth = isMobile ? 80 : 64;
+      const cap = weak ? 6 : (isMobile ? 8 : 12);
+      const colCount = Math.min(cap, Math.max(4, Math.floor(window.innerWidth / colWidth)));
       
       for(let i=0; i<colCount; i++) {
         const wrapper = document.createElement('div');
@@ -720,6 +726,25 @@
   }
 
   initCSSBackground();
+
+  document.addEventListener('visibilitychange', () => {
+    const play = document.hidden ? 'paused' : 'running';
+    document.querySelectorAll('.code-bg-section.is-visible .code-column').forEach(col => {
+      col.style.animationPlayState = play;
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    let url;
+    try { url = new URL(a.getAttribute('href'), location.href); } catch (err) { return; }
+    if (url.origin !== location.origin) return;
+    if (a.getAttribute('target') === '_blank') {
+      e.preventDefault();
+      location.assign(url.href);
+    }
+  });
 
   let resizeTimeout;
   window.addEventListener('resize', () => {

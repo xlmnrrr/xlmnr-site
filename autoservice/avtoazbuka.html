@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d0d0d">
 <title>АвтоАзбука — ремонт авто</title>
-<link rel="icon" href="icon.png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   :root { 
@@ -49,12 +48,19 @@
   }
   
   /* ЗАГЛУШКА ЛОГОТИПА */
-  .logo-header {
-    height: 56px;
-    width: auto;
-    max-width: 180px;
-    object-fit: contain;
-    display: block;
+  .logo-placeholder {
+    width: 160px;
+    height: 52px;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
   }
 
   .header-contact {
@@ -165,11 +171,19 @@
   }
   
   /* ЗАГЛУШКА ЛОГОТИПА В КОНТАКТАХ */
-  .contact-logo {
+  .contact-logo-placeholder {
     width: min(220px, 100%);
-    height: auto;
-    object-fit: contain;
-    display: block;
+    height: 88px;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
   }
 
   .contact-item { display: flex; align-items: flex-start; gap: 15px; }
@@ -301,7 +315,7 @@
 <!-- ШАПКА -->
 <header class="header">
   <div class="container header-inner">
-    <img class="logo-header" src="logo-header.png" alt="АвтоАзбука">
+    <div class="logo-placeholder">Логотип</div>
     <div class="header-contact">
       <a href="tel:+79990000000" class="header-phone">+7 (999) 000-00-00</a>
       <button class="btn" style="width: auto; padding: 10px 20px;" id="openBooking">Записаться</button>
@@ -387,7 +401,7 @@
 
       <div class="contact-info-large">
         <div class="contact-header">
-          <img class="contact-logo" src="logo-contacts.png" alt="АвтоАзбука">
+          <div class="contact-logo-placeholder">Логотип</div>
         </div>
         
         <div class="contact-item">
