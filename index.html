@@ -89,21 +89,22 @@
     }
 
     .code-column {
-      display: flex;
-      flex-direction: column;
-      color: rgba(194, 106, 74, 0.55);
-      white-space: pre;
+      display: block;
+      color: rgba(194, 106, 74, 0.78);
       font-size: 13px;
-      line-height: 1.7;
+      line-height: 1.85;
     }
-    .code-bg-section.is-visible .code-column {
-      animation: scrollCode linear infinite;
+    .code-line {
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      transform: scaleX(0);
+      transform-origin: left center;
+      animation: typeLine 1.05s steps(7, end) infinite alternate;
     }
-    .code-content { flex-shrink: 0; }
-    .bright-char { color: rgba(245, 242, 235, 0.6); font-weight: normal; }
-    @keyframes scrollCode {
-      from { transform: translate3d(0, 0, 0); }
-      to { transform: translate3d(0, -50%, 0); }
+    @keyframes typeLine {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
     }
 
     /* ================= ШАПКА ================= */
@@ -719,33 +720,19 @@
         
         const content = document.createElement('div');
         content.className = 'code-content';
-        
-        let htmlContent = '';
-        const rows = weak ? 28 : 36;
-        for(let j=0; j<rows; j++) {
+        const lineLength = narrow ? 6 : 8;
+        const rows = weak ? 16 : (narrow ? 20 : 26);
+        for (let j = 0; j < rows; j++) {
           let line = '';
-          const lineLength = narrow ? 4 : 6; 
-          for(let k=0; k<lineLength; k++) {
-            const char = chars[Math.floor(Math.random()*chars.length)];
-            if (Math.random() > 0.97) {
-              line += `<span class="bright-char">${char}</span>`;
-            } else {
-              line += char;
-            }
-          }
-          htmlContent += line + '\n';
+          for (let k = 0; k < lineLength; k++) line += chars[(Math.random() * chars.length) | 0];
+          const span = document.createElement('span');
+          span.className = 'code-line';
+          span.textContent = line;
+          span.style.animationDelay = (((j * 0.18) + (i * 0.23)) % 2.6) + 's';
+          span.style.animationDuration = (0.85 + (i % 5) * 0.08) + 's';
+          content.appendChild(span);
         }
-        
-        content.innerHTML = htmlContent;
-        const clone = content.cloneNode(true);
-        
         col.appendChild(content);
-        col.appendChild(clone);
-        
-        const duration = 30 + Math.random() * 20;
-        col.style.animationDuration = duration + 's';
-        col.style.animationDelay = -(Math.random() * duration) + 's';
-        
         wrapper.appendChild(col);
         bg.appendChild(wrapper);
       }
@@ -756,8 +743,8 @@
 
   document.addEventListener('visibilitychange', () => {
     const play = document.hidden ? 'paused' : 'running';
-    document.querySelectorAll('.code-bg-section.is-visible .code-column').forEach(col => {
-      col.style.animationPlayState = play;
+    document.querySelectorAll('.code-line').forEach(line => {
+      line.style.animationPlayState = play;
     });
   });
 
