@@ -4,24 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#121212">
-  <meta name="description" content="XLMNR — создание сайтов и лендингов, которые приносят клиентов.">
-  <title>XLMNR | Сайт в разработке</title>
+  <title>XLMNR</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23121212'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='22' fill='%23c26a4a'%3EX%3C/text%3E%3C/svg%3E">
   <style>
-    :root { --bg:#121212; --text:#f5f2eb; --text-muted:#a3a3a3; --accent:#c26a4a; --font-display:Georgia,"Times New Roman",serif; }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:24px; }
-    .card { max-width:520px; }
-    .mark { font-family:var(--font-display); letter-spacing:0.14em; color:var(--accent); font-size:14px; margin-bottom:20px; }
-    h1 { font-family:var(--font-display); font-weight:400; font-size:clamp(2rem,6vw,3.2rem); margin-bottom:14px; line-height:1.15; }
-    p { color:var(--text-muted); font-size:17px; line-height:1.5; }
+    body { margin:0; background:#121212; color:#f5f2eb; font-family:system-ui,sans-serif; }
+    .boot { min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
+    .boot p { color:#a3a3a3; font-size:14px; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="mark">XLMNR</div>
-    <h1>Сайт в разработке</h1>
-    <p>Скоро здесь откроется студия. Загляните чуть позже.</p>
-  </div>
+  <div class="boot" id="boot"><div style="font-family:Georgia,serif;letter-spacing:0.14em;color:#c26a4a">XLMNR</div><p>Загрузка…</p></div>
+  <script>
+  (async function () {
+    function b64ToU8(s) {
+      var bin = atob(s);
+      var u8 = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      return u8;
+    }
+    try {
+      var parts = await Promise.all([fetch('/p0.b64'), fetch('/p1.b64'), fetch('/p2.b64'), fetch('/p3.b64'), fetch('/p4.b64')]);
+      var texts = await Promise.all(parts.map(function(r) { return r.text(); }));
+      var b64 = texts.join('').replace(/\s/g, '');
+      var ds = new DecompressionStream('gzip');
+      var stream = new Blob([b64ToU8(b64)]).stream().pipeThrough(ds);
+      var html = await new Response(stream).text();
+      document.open();
+      document.write(html);
+      document.close();
+    } catch (e) {
+      document.getElementById('boot').innerHTML = '<p style="color:#ef4444">Ошибка загрузки. Обновите браузер.</p>';
+      console.error(e);
+    }
+  })();
+  </script>
 </body>
 </html>
