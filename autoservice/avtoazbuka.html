@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d0d0d">
-<title>АвтоСервис - Демо-сайт для портфолио</title>
+<title>АвтоАзбука — ремонт авто</title>
+<link rel="icon" href="icon.png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   :root { 
@@ -36,11 +37,9 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(21, 21, 21, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(13, 13, 13, 0.96);
     border-bottom: 1px solid var(--border);
-    padding: 15px 0;
+    padding: 10px 0;
   }
   .header-inner {
     display: flex;
@@ -50,18 +49,12 @@
   }
   
   /* ЗАГЛУШКА ЛОГОТИПА */
-  .logo-placeholder {
-    width: 180px;
-    height: 60px;
-    background: rgba(255,255,255,0.05);
-    border: 1px dashed var(--border);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    font-size: 14px;
-    font-weight: 600;
+  .logo-header {
+    height: 56px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+    display: block;
   }
 
   .header-contact {
@@ -172,18 +165,11 @@
   }
   
   /* ЗАГЛУШКА ЛОГОТИПА В КОНТАКТАХ */
-  .contact-logo-placeholder {
-    width: 220px;
-    height: 100px;
-    background: rgba(255,255,255,0.05);
-    border: 1px dashed var(--border);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    font-size: 14px;
-    font-weight: 600;
+  .contact-logo {
+    width: min(220px, 100%);
+    height: auto;
+    object-fit: contain;
+    display: block;
   }
 
   .contact-item { display: flex; align-items: flex-start; gap: 15px; }
@@ -216,6 +202,7 @@
     object-fit: cover;
     display: block;
     transition: transform 0.4s ease;
+    background: #1a1a1a;
   }
   .gallery-item:hover img { transform: scale(1.05); }
 
@@ -294,10 +281,18 @@
   .modal h3 { font-size: 24px; margin-bottom: 20px; color: var(--accent); }
 
   @media (max-width: 768px) {
-    .header-inner { flex-direction: column; gap: 10px; }
+    .header-inner { flex-wrap: wrap; gap: 10px; }
+    .header-contact { width: 100%; justify-content: space-between; }
+    .header-phone { font-size: 16px; }
     .contacts-wrapper { grid-template-columns: 1fr; }
     .map-placeholder { min-height: 200px; }
     .section-pad { padding: 40px 0; }
+    .bg-wrapper-top { background-image: url('fon-phone.jpg'); }
+    .btn { width: auto; }
+  }
+  @media (max-width: 420px) {
+    .header-contact { flex-direction: column; align-items: stretch; }
+    .header-phone { text-align: center; }
   }
 </style>
 </head>
@@ -306,7 +301,7 @@
 <!-- ШАПКА -->
 <header class="header">
   <div class="container header-inner">
-    <div class="logo-placeholder">[Логотип]</div>
+    <img class="logo-header" src="logo-header.png" alt="АвтоАзбука">
     <div class="header-contact">
       <a href="tel:+79990000000" class="header-phone">+7 (999) 000-00-00</a>
       <button class="btn" style="width: auto; padding: 10px 20px;" id="openBooking">Записаться</button>
@@ -392,7 +387,7 @@
 
       <div class="contact-info-large">
         <div class="contact-header">
-          <div class="contact-logo-placeholder">[Логотип]</div>
+          <img class="contact-logo" src="logo-contacts.png" alt="АвтоАзбука">
         </div>
         
         <div class="contact-item">
