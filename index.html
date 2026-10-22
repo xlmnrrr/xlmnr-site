@@ -73,11 +73,10 @@
     .code-column-wrapper {
       position: absolute;
       top: 0;
-      width: 40px;
       height: 100%;
-      overflow: hidden; 
+      overflow: hidden;
       opacity: 0;
-      transform: translateY(40px);
+      transform: translate3d(0, 24px, 0);
     }
     
     .code-bg-section.is-visible .code-column-wrapper {
@@ -92,12 +91,14 @@
     .code-column {
       display: flex;
       flex-direction: column;
-      animation: scrollCode linear infinite;
-      animation-play-state: paused;
-      color: var(--accent);
-      white-space: pre; 
+      color: rgba(194, 106, 74, 0.55);
+      white-space: pre;
+      font-size: 13px;
+      line-height: 1.7;
     }
-    .code-bg-section.is-visible .code-column { animation-play-state: running; }
+    .code-bg-section.is-visible .code-column {
+      animation: scrollCode linear infinite;
+    }
     .code-content { flex-shrink: 0; }
     .bright-char { color: rgba(245, 242, 235, 0.6); font-weight: normal; }
     @keyframes scrollCode {
@@ -599,7 +600,7 @@
       <div class="browser-address" id="browserUrl">autoservice</div>
     </div>
     <div class="browser-body">
-      <iframe class="browser-iframe" id="browserIframe" src="" loading="lazy"></iframe>
+      <iframe class="browser-iframe" id="browserIframe" title="Демонстрация сайта" src="about:blank"></iframe>
     </div>
   </div>
 </div>
@@ -672,18 +673,17 @@
       // Оптимизация для мобильных: уменьшаем количество колонок
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const saveData = navigator.connection && navigator.connection.saveData;
-      const cores = navigator.hardwareConcurrency || 4;
-      const weak = saveData || cores <= 4 || window.innerWidth < 1024;
-      if (weak && bg !== document.querySelector('.hero .css-code-bg')) return;
-      const isMobile = window.innerWidth < 768;
-      const colWidth = isMobile ? 80 : 64;
-      const cap = weak ? 6 : (isMobile ? 8 : 12);
-      const colCount = Math.min(cap, Math.max(4, Math.floor(window.innerWidth / colWidth)));
+      const cores = navigator.hardwareConcurrency || 8;
+      const weak = saveData || cores <= 4;
+      const narrow = window.innerWidth < 768;
+      if (weak && !bg.closest('.hero')) return;
+      const colCount = weak ? 8 : (narrow ? 9 : Math.min(20, Math.max(12, Math.round(window.innerWidth / 90))));
       
       for(let i=0; i<colCount; i++) {
         const wrapper = document.createElement('div');
         wrapper.className = 'code-column-wrapper';
-        wrapper.style.left = (i * colWidth) + 'px';
+        wrapper.style.left = (i * 100 / colCount) + '%';
+        wrapper.style.width = (100 / colCount) + '%';
         
         // СЛУЧАЙНАЯ ЗАДЕРЖКА от 0 до 2 секунд
         wrapper.style.animationDelay = (Math.random() * 2) + 's';
@@ -695,9 +695,10 @@
         content.className = 'code-content';
         
         let htmlContent = '';
-        for(let j=0; j<40; j++) {
+        const rows = weak ? 28 : 36;
+        for(let j=0; j<rows; j++) {
           let line = '';
-          const lineLength = 3 + Math.floor(Math.random() * 2); 
+          const lineLength = narrow ? 4 : 6; 
           for(let k=0; k<lineLength; k++) {
             const char = chars[Math.floor(Math.random()*chars.length)];
             if (Math.random() > 0.97) {
@@ -747,9 +748,14 @@
   });
 
   let resizeTimeout;
+  let builtW = window.innerWidth;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(initCSSBackground, 500);
+    resizeTimeout = setTimeout(() => {
+      if (Math.abs(window.innerWidth - builtW) < 120) return;
+      builtW = window.innerWidth;
+      initCSSBackground();
+    }, 400);
   });
 
   // ================= COOKIE ЛОГИКА =================
@@ -928,11 +934,22 @@
   const browserModal = document.getElementById('browserModal');
   const browserIframe = document.getElementById('browserIframe');
   const browserUrl = document.getElementById('browserUrl');
-  function openBrowser(url, urlText) { browserIframe.src = url; browserUrl.textContent = urlText || 'demo-site'; browserModal.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  let browserCloseTimer = 0;
+  function openBrowser(url, urlText) {
+    clearTimeout(browserCloseTimer);
+    browserUrl.textContent = urlText || 'demo-site';
+    browserModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (browserIframe.getAttribute('src') !== url) browserIframe.src = url;
+  }
   function closeBrowser() {
+    if (!browserModal.classList.contains('open')) return;
     browserModal.classList.remove('open');
     if (!document.getElementById('aiModal').classList.contains('open')) document.body.style.overflow = '';
-    setTimeout(() => { browserIframe.src = ''; }, 400);
+    clearTimeout(browserCloseTimer);
+    browserCloseTimer = setTimeout(() => {
+      if (!browserModal.classList.contains('open')) browserIframe.src = 'about:blank';
+    }, 280);
   }
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
